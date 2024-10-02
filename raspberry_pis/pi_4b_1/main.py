@@ -6,6 +6,8 @@ import os
 import adafruit_dht
 import board
 import sqlite3
+import paho.mqtt.client as paho
+from paho import mqtt
 
 load_dotenv()
 
@@ -46,3 +48,42 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS readings (
     humidity REAL
 )''')
 conn.commit()
+
+# MQTT setup
+mqtt_client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
+mqtt_client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+
+def on_connect(client, userdata, flags, rc, properties=None):
+    if rc == 0:
+        print("Connected to MQTT Broker")
+        client.subscribe("home/fan/cmd")
+        print("Subscribed to home/fan/cmd")
+    else:
+        print(f"Failed to connect to MQTT Broker, return code {rc}")
+
+
+def on_message(client, userdata, msg):
+    global FAN_STATE
+    command = msg.payload.decode()
+    print(f"Received command: {command}")
+    if command == 'turn on':
+        if not FAN_STATE:
+            FAN_STATE = True
+            print("Fan turned ON")
+            # Add code to physically turn on the fan when set up !!!!!!!!!!!!!!!!!!!
+        else:
+            print("Fan is already ON")
+    elif command == 'turn off':
+        if FAN_STATE:
+            FAN_STATE = False
+            print("Fan turned OFF")
+            # Add code to physically turn off the fan when set up !!!!!!!!!!!!!!!!!
+        else:
+            print("Fan is already OFF")
+
+
+mqtt_client.connect(MQTT_BROKER, 8883)
+mqtt_client.on_connect = on_connect
+mqtt_client.on_message = on_message
+mqtt_client.loop_start()
