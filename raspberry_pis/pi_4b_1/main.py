@@ -8,6 +8,9 @@ import board
 import sqlite3
 import paho.mqtt.client as paho
 from paho import mqtt
+import json
+import time
+import threading
 
 load_dotenv()
 
@@ -82,8 +85,91 @@ def on_message(client, userdata, msg):
         else:
             print("Fan is already OFF")
 
-
 mqtt_client.connect(MQTT_BROKER, 8883)
 mqtt_client.on_connect = on_connect
 mqtt_client.on_message = on_message
 mqtt_client.loop_start()
+
+# Data lists for storing sensor readings
+temperature_readings = []
+humidity_readings = []
+
+# Read the data from the sensor every 3 seconds and send real time updates for potential visualization
+def read_sensor():
+    while True:
+        try:
+            temperature = dhtDevice.temperature * (9/5) + 32  # Convert to Fahrenheit
+            humidity = dhtDevice.humidity
+            if temperature and humidity:
+                temperature_readings.append(temperature)
+                humidity_readings.append(humidity)
+                print(f"Temp={temperature:.1f}°F Humidity={humidity:.1f}%")
+
+                # Publish real-time data to MQTT
+                data = json.dumps({
+                    'temperature': temperature,
+                    'humidity': humidity,
+                    'timestamp': time.strftime('%Y-%m-%d %H:%M:%S')
+                })
+                mqtt_client.publish("home/sensor/data", data)
+            else:
+                print("Sensor failure. Check wiring.")
+        except RuntimeError as error:
+            print(f"Sensor error: {error}")
+        time.sleep(3)
+
+
+# Store the average data every minute and check thresholds every 5 minutes
+def process_data():
+    minute_counter = 0
+    fan_alert_sent = False
+
+    while True:
+        time.sleep(60)  # Wait for one minute
+        if temperature_readings and humidity_readings:
+            avg_temp = sum(temperature_readings) / len(temperature_readings)
+            avg_hum = sum(humidity_readings) / len(humidity_readings)
+
+            # Store in database
+            cursor.execute("INSERT INTO readings (temperature, humidity) VALUES (?, ?)", (avg_temp, avg_hum))
+            conn.commit()
+
+            # Clear lists for next minute
+            temperature_readings.clear()
+            humidity_readings.clear()
+
+            minute_counter += 1
+
+            # Every 5 minutes, check thresholds
+            if minute_counter >= 5:
+                minute_counter = 0
+                # Retrieve last 5 averages
+                cursor.execute("SELECT AVG(temperature), AVG(humidity) FROM readings ORDER BY id DESC LIMIT 5")
+                avg_5min_temp, avg_5min_hum = cursor.fetchone()
+                print(f"5-min Avg Temp: {avg_5min_temp:.1f}°F, Humidity: {avg_5min_hum:.1f}%")
+
+                # Send an alert if temperature exceeds thresholds
+                if avg_5min_temp > TEMP_THRESHOLD and not FAN_STATE and not fan_alert_sent:
+                    # Send alert via MQTT (Discord bot will pick this up)
+                    send_alert(f"High temperature alert: {avg_5min_temp:.1f}°F")
+                    fan_alert_sent = True
+                elif avg_5min_temp > TEMP_HIGH_THRESHOLD:
+                    # Send very high alert
+                    send_alert(f"Very high temperature alert: {avg_5min_temp:.1f}°F")
+                    fan_alert_sent = True
+                elif avg_5min_temp <= TEMP_THRESHOLD:
+                    fan_alert_sent = False  # Reset alert flag
+        else:
+            print("No data collected in the past minute.")
+
+# Publish alerts to MQTT
+def send_alert(message):
+    mqtt_client.publish("home/alerts", message)
+    print(f"Alert sent: {message}")
+
+# Start threads
+sensor_thread = threading.Thread(target=read_sensor)
+sensor_thread.start()
+
+processing_thread = threading.Thread(target=process_data)
+processing_thread.start()          
