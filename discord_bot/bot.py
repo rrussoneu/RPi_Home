@@ -59,7 +59,7 @@ async def on_ready():
         await channel.send("Bot is online and ready for commands!")
 
 @bot.command(name='light')
-async def fan_control(ctx, action: str):
+async def light_control(ctx, action: str):
     if ctx.author.id != AUTHORIZED_USER:
         await ctx.send("You are not authorized to use this command.")
         return
@@ -75,7 +75,7 @@ async def fan_control(ctx, action: str):
         mqtt_client.publish("discord_bot/door/light/control", "turn off")
         await ctx.send("Light is being turned OFF.")
     else:
-        await ctx.send("Unknown command. Use `!fan on` or `!fan off`.")
+        await ctx.send("Unknown command. Use `!light on` or `!light off`.")
 
 # Function to send an alert to the Discord channel
 async def send_alert(message):
