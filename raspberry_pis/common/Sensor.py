@@ -30,8 +30,8 @@ class Sensor:
 
 
 class TemperatureSensorDHT22(Sensor):
-    def __init__(self, pin: Pin, name=""):
-        super(name)
+    def __init__(self, pin, name=""):
+        super().__init__(name)
         self.sensor = adafruit_dht.DHT22(pin=pin)
         self.cursor = None
         self.conn = None
