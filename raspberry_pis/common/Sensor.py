@@ -56,7 +56,7 @@ class TemperatureSensorDHT22(Sensor):
                 self.temperature_readings.append(temperature)
                 self.humidity_readings.append(humidity)
                 self.timestamps.append(timestamp)
-            if temperature and humidity:
+            if temperature is not None and humidity is not None:
                 return {'temperature' : temperature, 'humidity' : humidity, 'timestamp': timestamp}
             else:
                 return {}
@@ -69,7 +69,7 @@ class TemperatureSensorDHT22(Sensor):
         while True:
             try:
                 data = self.getReading()
-                if len(data.keys()) == 2:
+                if len(data.keys()) == 3:
                     for topic, client in clients.items():
                         self.publishData(data=data, client=client, topic=topic)
                 else:
