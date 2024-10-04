@@ -32,6 +32,9 @@ class RPi4:
     def sensorRead(self, sensor_name: str, clients: dict[str, Client]):
         self.sensors[sensor_name].readData(clients)
 
+    def addSensor(self, sensor_name: str, sensor: Sensor):
+        self.sensors[sensor_name] = sensor
+
         
 
 

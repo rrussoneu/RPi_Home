@@ -1,6 +1,5 @@
 from paho.mqtt.client import Client
 import json
-from board import Pin
 import adafruit_dht
 import time
 from sqlite3 import Cursor, Connection
@@ -12,7 +11,7 @@ class Sensor:
 
     def publishData(self, data: dict, client: Client, topic: str):
         try:
-            client.publish(topic=topic, data=json.dumps(data))
+            client.publish(topic=topic, payload=json.dumps(data))
         except RuntimeError as error:
             print(f"Sensor error: {error}")
 
