@@ -7,7 +7,10 @@ import paho.mqtt.client as paho
 from paho import mqtt
 from ..common.topics import *
 import time
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Env vars
 MQTT_BROKER = os.getenv('MQTT_BROKER')           
 MQTT_PORT = int(os.getenv('MQTT_PORT', '8883'))  
@@ -40,7 +43,7 @@ conn.commit()
 # Pi/ sensor set up
 pi = RPi4(device_id=1,name="living_room_pi")
 
-temperature_sensor = TemperatureSensorDHT22(board.D4, "living_room_dht")
+temperature_sensor = TemperatureSensorDHT22(board.D17, "living_room_dht")
 temperature_sensor.setCursor(cursor=cursor)
 temperature_sensor.setConn(conn=conn)
 
