@@ -36,6 +36,7 @@ def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         print("Connected to MQTT Broker")
         client.subscribe(BOT_DOOR_LIGHT_ALERT)
+        client.subscribe(BOT_LIVING_ROOM_TEMP_ALERT)
         
     else:
         print(f"Failed to connect to MQTT Broker, return code {rc}")
@@ -45,6 +46,11 @@ def on_message(client, userdata, msg):
         alert_message = msg.payload.decode()
         print(f"Received alert: {alert_message}")
         asyncio.run_coroutine_threadsafe(send_alert(alert_message), bot.loop)
+    elif msg.topic == BOT_LIVING_ROOM_TEMP_ALERT:
+        alert_message = msg.payload.decode()
+        print(f"Received alert: {alert_message}")
+        asyncio.run_coroutine_threadsafe(send_alert(alert_message), bot.loop)
+
 
 mqtt_client.connect(MQTT_BROKER, MQTT_PORT)
 mqtt_client.on_connect = on_connect
