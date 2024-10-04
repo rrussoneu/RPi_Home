@@ -108,7 +108,7 @@ def hivemq_on_message(client, userdata, msg):
             print("Fan is already OFF")
 
 pi.addClient("local_mosquitto", broker=MOSQUITTO_BROKER, port=MOSQUITTO_PORT, on_connect=on_local_connect, on_message=on_local_on_message, tls=False, client_id="Mosquitto_Client")
-pi.addClient("hivemq_client", broker=MQTT_BROKER, port=MQTT_PORT, on_connect=hivemq_on_connect, on_message=hivemq_on_connect, tls=True, client_id="HiveMQ_Client", username=MQTT_USERNAME, password=MQTT_PASSWORD)
+pi.addClient("hivemq_client", broker=MQTT_BROKER, port=MQTT_PORT, on_connect=hivemq_on_connect, on_message=hivemq_on_message, tls=True, client_id="HiveMQ_Client", username=MQTT_USERNAME, password=MQTT_PASSWORD)
 
 
 def main():
