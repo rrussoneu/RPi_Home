@@ -58,7 +58,7 @@ def on_local_connect(client, userdata, flags, rc, properties=None):
     else:
         print(f"Failed to connect to Mosquitto MQTT broker, return code {rc}")
 
-# On message for Mosquitto
+# On message for Mosquitto - really shouldn't be getting a command but have as a back up in case bot fails
 def on_local_on_message(client, userdata, msg):
     global FAN_STATE
     command = msg.payload.decode()

@@ -5,6 +5,7 @@ from discord.ext import commands
 import paho.mqtt.client as paho
 from paho import mqtt
 import asyncio
+from bot_topics import *
 
 # Set up Discord bot
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -34,13 +35,13 @@ mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         print("Connected to MQTT Broker")
-        client.subscribe("discord_bot/door/light/alert")
+        client.subscribe(BOT_DOOR_LIGHT_ALERT)
         
     else:
         print(f"Failed to connect to MQTT Broker, return code {rc}")
 
 def on_message(client, userdata, msg):
-    if msg.topic == "discord_bot/door/light/alert":
+    if msg.topic == BOT_DOOR_LIGHT_ALERT:
         alert_message = msg.payload.decode()
         print(f"Received alert: {alert_message}")
         asyncio.run_coroutine_threadsafe(send_alert(alert_message), bot.loop)
@@ -69,13 +70,33 @@ async def light_control(ctx, action: str):
         return
 
     if action.lower() == 'on':
-        mqtt_client.publish("discord_bot/door/light/control", "turn on")
+        mqtt_client.publish(BOT_DOOR_LIGHT_CONTROL, "turn on")
         await ctx.send("Light is being turned ON.")
     elif action.lower() == 'off':
-        mqtt_client.publish("discord_bot/door/light/control", "turn off")
+        mqtt_client.publish(BOT_DOOR_LIGHT_CONTROL, "turn off")
         await ctx.send("Light is being turned OFF.")
     else:
         await ctx.send("Unknown command. Use `!light on` or `!light off`.")
+
+
+@bot.command(name='fan')
+async def light_control(ctx, action: str):
+    if ctx.author.id != AUTHORIZED_USER:
+        await ctx.send("You are not authorized to use this command.")
+        return
+    
+    if ctx.channel.id != CHANNEL_ID:
+        await ctx.send("You cannot use this command in this channel.")
+        return
+
+    if action.lower() == 'on':
+        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "turn on")
+        await ctx.send("Light is being turned ON.")
+    elif action.lower() == 'off':
+        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "turn off")
+        await ctx.send("Light is being turned OFF.")
+    else:
+        await ctx.send("Unknown command. Use `!fan on` or `!fan off`.")
 
 # Function to send an alert to the Discord channel
 async def send_alert(message):
