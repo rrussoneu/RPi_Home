@@ -3,9 +3,9 @@ import json
 import discord
 from discord.ext import commands
 import paho.mqtt.client as paho
-from paho import mqtt
 import asyncio
 from bot_topics import *
+import ssl
 
 # Set up Discord bot
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -29,7 +29,7 @@ MQTT_PASSWORD = os.getenv('MQTT_PASSWORD')
 
 # Init MQTT client
 mqtt_client = paho.Client(client_id="", userdata=None, protocol=paho.MQTTv5)
-mqtt_client.tls_set(tls_version=mqtt.client.ssl.PROTOCOL_TLS)
+mqtt_client.tls_set(tls_version=ssl.PROTOCOL_TLS)
 mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 
 def on_connect(client, userdata, flags, rc, properties=None):
