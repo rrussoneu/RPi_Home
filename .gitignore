@@ -163,3 +163,5 @@ cython_debug/
 
 # Ignore any databases
 *.db
+
+.env.save
