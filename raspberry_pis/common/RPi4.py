@@ -1,7 +1,7 @@
 
 from paho.mqtt.client import Client
 import paho.mqtt.client as paho
-from Sensor import Sensor
+from common.Sensor import Sensor
 import ssl
 
 class RPi4:

@@ -3,11 +3,10 @@ import os
 from dotenv import load_dotenv
 import time
 import threading
-from ..common.topics import *
-from ..common.RPi4 import RPi4
+from common.topics import *
+from common.RPi4 import RPi4
 import sqlite3
 import json
-
 
 # Load environment variables
 load_dotenv()
