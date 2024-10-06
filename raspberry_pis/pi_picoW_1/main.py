@@ -7,7 +7,7 @@ from umqtt.simple import MQTTClient
 # MQTT setup
 mqtt_server = ""
 mqtt_port = 1883  
-mqtt_topic_alert = "home/door/light/alert"
+mqtt_topic_alert = 'local/door_light/alert'
 mqtt_topic_control = 'cmnd/home/door/light/POWER'
 
 client_id = "pico_w"
@@ -18,7 +18,6 @@ client_id = "pico_w"
 ssid = 'PUTHERE'
 password = 'PUTHERE'
 
-
 # Motion sensor
 pir = machine.Pin(16, machine.Pin.IN)
 
@@ -27,8 +26,9 @@ pir = machine.Pin(16, machine.Pin.IN)
 light_on = False
 in_cooldown = False
 
-# Cooldown period of three minutes
-cooldown_period = 180 
+
+# Cooldown period of 45 seconds
+cooldown_period = 45 
 last_motion_time = 0  # Timestamp of the last motion detection
 
 # Global MQTT client object
@@ -49,15 +49,15 @@ def send_mqtt_message(topic, message):
     except OSError as e:
         reconnect_mqtt()
 
-# Handle the MQTT messages received
+# Handle the MQTT messages received 
 def mqtt_callback(topic, msg):
     global light_on
     if topic == b'mqtt_topic_control':
         if msg == b'on' and not light_on:
-            send_mqtt_message(mqtt_topic_alert, "Light turned ON")
+            send_mqtt_message(mqtt_topic_alert, "ON")
             light_on = True
         elif msg == b'off' and light_on:
-            send_mqtt_message(mqtt_topic_alert, "Light turned OFF")
+            send_mqtt_message(mqtt_topic_alert, "OFF")
             light_on = False
 
 # Subscribe to topic for light control
@@ -82,30 +82,38 @@ def reconnect_mqtt():
 # Main logic for motion detection
 def main():
     global mqtt_client, light_on, last_motion_time, in_cooldown
-
+    print("Connecting to wifi")
     # Connect to wifi
     connect_to_wifi()
-
+    print("Connected to wifi")
+    
+    
     # Set up MQTT client
     mqtt_client = MQTTClient(client_id, mqtt_server, port=mqtt_port, keepalive=60)
     
     # Subscribe to light control topic
     mqtt_subscribe()
     
+    on_boot = False
     while True:
         current_time = time.time()
         try:
             if pir.value() == 1 and not in_cooldown:  # Motion detected
-                last_motion_time = current_time 
-                if not light_on:
-                    send_mqtt_message(mqtt_topic_alert, "Light turned ON")
-                    light_on = True
-                    in_cooldown = True
-                
-                elif light_on:
-                    send_mqtt_message(mqtt_topic_alert, "Light turned OFF")
-                    light_on = False
-                    in_cooldown = True
+                if on_boot == False:
+                    on_boot = True
+                else:
+                    
+                    print("Motion detected")
+                    last_motion_time = current_time 
+                    if not light_on:
+                        send_mqtt_message(mqtt_topic_alert, "ON")
+                        light_on = True
+                        in_cooldown = True
+                    
+                    elif light_on:
+                        send_mqtt_message(mqtt_topic_alert, "OFF")
+                        light_on = False
+                        in_cooldown = True
     
             elif in_cooldown and (current_time - last_motion_time > cooldown_period):
                 in_cooldown = False 
@@ -119,4 +127,3 @@ def main():
 
 # Run
 main()
-
