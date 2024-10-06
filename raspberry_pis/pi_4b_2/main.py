@@ -43,6 +43,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS temperature_readings (
     source TEXT
 )''')
 conn.commit()
+conn.close()
 
 
 
@@ -54,6 +55,8 @@ def on_local_message(client, userdata, msg):
         hivemq_client = p.getClient('hivemq_client')
         topic = msg.topic
         
+        conn = sqlite3.connect('local_database.db')
+        cursor = conn.cursor()
 
         # If message needs to be forwarded to HiveMQ and bot
         if topic in local_to_remote_topic:
@@ -71,7 +74,7 @@ def on_local_message(client, userdata, msg):
                 timestamp = data['timestamp']
                 cursor.execute("INSERT INTO temperature_readings (temperature, humidity, timestamp, source) VALUES (?, ?, ?, ?)", (temperature, humidity, timestamp, topic))
                 conn.commit()
-    
+        conn.close()
     except Exception as e:
         print(f"Exception in on_local_message: {e}")
 
@@ -128,20 +131,12 @@ def on_hivemq_connect(client, userdata, flags, rc, properties=None):
         print(f"Exception in on_hivemq_connect: {e}")
 
 def main():
-    '''
-    pi = RPi4(device_id=0,name="relay_pi")
-
-    pi.addClient("local_mosquitto", broker=MOSQUITTO_BROKER, port=MOSQUITTO_PORT, on_connect=on_local_connect, on_message=on_local_message, tls=False, client_id="Mosquitto_Client")
-    #pi.addClient("hivemq_client", broker=HIVEMQ_BROKER, port=HIVEMQ_PORT, on_connect=on_hivemq_connect, on_message=on_hivemq_message, tls=True, client_id="HiveMQ_Client", username=HIVEMQ_USERNAME, password=HIVEMQ_PASSWORD)
-    pi.startClients()
-    pi.getClient('local_mosquitto').publish('cmnd/living_room/fan/POWER', 'ON')
-    '''
     pi = RPi4(device_id=0,name="relay_pi")
 
     pi.addClient("local_mosquitto", broker=MOSQUITTO_BROKER, port=MOSQUITTO_PORT, on_connect=on_local_connect, on_message=on_local_message, tls=False, client_id="")
     pi.addClient("hivemq_client", broker=HIVEMQ_BROKER, port=HIVEMQ_PORT, on_connect=on_hivemq_connect, on_message=on_hivemq_message, tls=True, client_id="", username=HIVEMQ_USERNAME, password=HIVEMQ_PASSWORD)
     pi.startClients()
-    #pi.getClient('local_mosquitto').publish(HOME_DOOR_LIGHT_POWER, 'OFF')
+    
     while True: # Keep the main thread alive while the clients run on separate ones
         time.sleep(1)
 
