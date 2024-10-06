@@ -1,11 +1,11 @@
 import os
-from ..common.RPi4 import RPi4
-from ..common.Sensor import TemperatureSensorDHT22
+from common.RPi4 import RPi4
+from common.Sensor import TemperatureSensorDHT22
 import board
 import sqlite3
 import paho.mqtt.client as paho
 from paho import mqtt
-from ..common.topics import *
+from common.topics import *
 import time
 import os
 from dotenv import load_dotenv
@@ -45,15 +45,16 @@ def on_local_on_message(client, userdata, msg):
     if command == 'turn on':
         if not FAN_STATE:
             FAN_STATE = True
+            client.publish(HOME_LIVING_ROOM_FAN, "ON")
             print("Fan turned ON")
-            # Add code to physically turn on the fan when set up !!!!!!!!!!!!!!!!!!!
+        
         else:
             print("Fan is already ON")
     elif command == 'turn off':
         if FAN_STATE:
             FAN_STATE = False
             print("Fan turned OFF")
-            # Add code to physically turn off the fan when set up !!!!!!!!!!!!!!!!!
+            client.publish(HOME_LIVING_ROOM_FAN, "OFF")
         else:
             print("Fan is already OFF")
 
@@ -70,19 +71,21 @@ def hivemq_on_connect(client, userdata, flags, rc, properties=None):
 def hivemq_on_message(client, userdata, msg):
     global FAN_STATE
     command = msg.payload.decode()
+    p = userdata
+    local_client = p.getClient('local_mosquitto')
     print(f"Received command: {command}")
     if command == 'turn on':
         if not FAN_STATE:
             FAN_STATE = True
             print("Fan turned ON")
-            # Add code to physically turn on the fan when set up !!!!!!!!!!!!!!!!!!!
+            local_client.publish(HOME_LIVING_ROOM_FAN, "ON")
         else:
             print("Fan is already ON")
     elif command == 'turn off':
         if FAN_STATE:
             FAN_STATE = False
             print("Fan turned OFF")
-            # Add code to physically turn off the fan when set up !!!!!!!!!!!!!!!!!
+            local_client.publish(HOME_LIVING_ROOM_FAN, "OFF")
         else:
             print("Fan is already OFF")
 
@@ -107,10 +110,9 @@ def main():
     temperature_sensor = TemperatureSensorDHT22(pin=board.D26, name="living_room_dht")
     temperature_sensor.setCursor(cursor=cursor)
     temperature_sensor.setConn(conn=conn)
-
-    pi.addSensor(temperature_sensor)
-    pi.addClient("local_mosquitto", broker=MOSQUITTO_BROKER, port=MOSQUITTO_PORT, on_connect=on_local_connect, on_message=on_local_on_message, tls=False, client_id="Mosquitto_Client")
-    pi.addClient("hivemq_client", broker=MQTT_BROKER, port=MQTT_PORT, on_connect=hivemq_on_connect, on_message=hivemq_on_message, tls=True, client_id="HiveMQ_Client", username=MQTT_USERNAME, password=MQTT_PASSWORD)
+    pi.addSensor(sensor_name=temperature_sensor.name, sensor=temperature_sensor)
+    pi.addClient("local_mosquitto", broker=MOSQUITTO_BROKER, port=MOSQUITTO_PORT, on_connect=on_local_connect, on_message=on_local_on_message, tls=False, client_id="")
+    pi.addClient("hivemq_client", broker=MQTT_BROKER, port=MQTT_PORT, on_connect=hivemq_on_connect, on_message=hivemq_on_message, tls=True, client_id="", username=MQTT_USERNAME, password=MQTT_PASSWORD)
     pi.startClients()
     temperature_sensor.run(data_clients={REAL_TIME_LIVING_ROOM_TEMP: pi.getClient('hivemq_client')}, threshold=TEMP_THRESHOLD, high_threshold=TEMP_HIGH_THRESHOLD, alert_client=pi.getClient('hivemq_client'), alert_topic=BOT_LIVING_ROOM_TEMP_ALERT, local_client=pi.getClient('local_mosquitto'), local_topic=HOME_LIVING_ROOM_TEMP)
     while True:
