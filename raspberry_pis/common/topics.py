@@ -9,7 +9,7 @@ REAL_TIME_LIVING_ROOM_TEMP = 'visualize/livingroom/temp'
 
 
 # Mosquitto
-HOME_DOOR_LIGHT = 'home/door/light'
-HOME_DOOR_LIGHT_CONTROL = 'home/door/light/control'
-HOME_LIVING_ROOM_TEMP = 'home/livingroom/temp'
-
+HOME_DOOR_LIGHT_POWER = 'cmnd/home/door/light/POWER'
+HOME_DOOR_LIGHT_ALERT = 'local/door_light/alert'
+HOME_LIVING_ROOM_TEMP = 'local/living_room/temp'
+HOME_LIVING_ROOM_FAN = 'cmnd/living_room/fan/POWER'

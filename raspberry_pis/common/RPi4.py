@@ -11,16 +11,23 @@ class RPi4:
         self.sensors = {} # Dict of sensors attached
         self.mqtt_clients = {} # Dictionary of MQTT clients
     
-    def addClient(self, client_name, broker, port, on_connect, on_message, tls=True, client_id="", username=None, password=None, protocol=paho.MQTTv5, subscriptions=[]):
-        new_client = paho.Client(client_id=client_id, protocol=protocol)
-        if tls:
-            new_client.tls_set(tls_version=ssl.PROTOCOL_TLS)
-        if username and password:
-            new_client.username_pw_set(username=username, password=password)
-        new_client.on_connect=on_connect
-        new_client.on_message=on_message
-        new_client.connect(broker, port)
-        self.mqtt_clients[client_name] = new_client
+    def addClient(self, client_name, broker, port, on_connect, on_message, tls=True, client_id="", username=None, password=None, protocol=paho.MQTTv5, subscriptions=[], userdata=None):
+        try:
+            if userdata is None:
+                userdata = self
+                
+            new_client = paho.Client(client_id=client_id, protocol=protocol, userdata=userdata)
+            print('here')
+            if tls:
+                new_client.tls_set(tls_version=ssl.PROTOCOL_TLS)
+            if username and password:
+                new_client.username_pw_set(username=username, password=password)
+            new_client.on_connect=on_connect
+            new_client.on_message=on_message
+            new_client.connect(broker, port)
+            self.mqtt_clients[client_name] = new_client
+        except Exception as e:
+            print(f'error: {e}')
 
     def startClients(self):
         for client in self.mqtt_clients.values():

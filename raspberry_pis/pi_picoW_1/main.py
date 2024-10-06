@@ -7,8 +7,8 @@ from umqtt.simple import MQTTClient
 # MQTT setup
 mqtt_server = ""
 mqtt_port = 1883  
-mqtt_topic_alert = "home/door/alert"
-mqtt_topic_control = "home/door/light/control" 
+mqtt_topic_alert = "home/door/light/alert"
+mqtt_topic_control = 'cmnd/home/door/light/POWER'
 
 client_id = "pico_w"
 
@@ -52,7 +52,7 @@ def send_mqtt_message(topic, message):
 # Handle the MQTT messages received
 def mqtt_callback(topic, msg):
     global light_on
-    if topic == b'home/room/light/control':
+    if topic == b'mqtt_topic_control':
         if msg == b'on' and not light_on:
             send_mqtt_message(mqtt_topic_alert, "Light turned ON")
             light_on = True
