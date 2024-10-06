@@ -65,6 +65,8 @@ def on_local_message(client, userdata, msg):
             print(f"Local Mosquitto message received: {topic} -> {payload}")
             hivemq_client.publish(remote_topic, payload)
             print(f"Forwarded message: {remote_topic} -> {payload}")
+            if topic == HOME_DOOR_LIGHT_ALERT:
+                client.publish(HOME_DOOR_LIGHT_POWER, payload)
         else:
             # Save the reading form the living room temp sensor into database
             if topic == HOME_LIVING_ROOM_TEMP:
