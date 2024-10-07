@@ -7,7 +7,7 @@ from umqtt.simple import MQTTClient
 # MQTT setup
 mqtt_server = ""
 mqtt_port = 1883  
-mqtt_topic_alert = 'local/door_light/alert'
+#mqtt_topic_alert = 'local/door_light/alert'
 mqtt_topic_control = 'cmnd/home/door/light/POWER'
 
 client_id = "pico_w"
@@ -52,12 +52,11 @@ def send_mqtt_message(topic, message):
 # Handle the MQTT messages received 
 def mqtt_callback(topic, msg):
     global light_on
-    if topic == b'mqtt_topic_control':
-        if msg == b'on' and not light_on:
-            send_mqtt_message(mqtt_topic_alert, "ON")
+    # Update whether or not the light is on if there's a command send to the lamp
+    if topic == b'cmnd/home/door/light/POWER':
+        if msg == b'ON' and not light_on:
             light_on = True
-        elif msg == b'off' and light_on:
-            send_mqtt_message(mqtt_topic_alert, "OFF")
+        elif msg == b'OFF' and light_on:
             light_on = False
 
 # Subscribe to topic for light control
@@ -106,12 +105,12 @@ def main():
                     print("Motion detected")
                     last_motion_time = current_time 
                     if not light_on:
-                        send_mqtt_message(mqtt_topic_alert, "ON")
+                        send_mqtt_message(mqtt_topic_control, "ON")
                         light_on = True
                         in_cooldown = True
                     
                     elif light_on:
-                        send_mqtt_message(mqtt_topic_alert, "OFF")
+                        send_mqtt_message(mqtt_topic_control, "OFF")
                         light_on = False
                         in_cooldown = True
     
