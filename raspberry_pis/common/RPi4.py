@@ -10,6 +10,7 @@ class RPi4:
         self.name = name # Name for device
         self.sensors = {} # Dict of sensors attached
         self.mqtt_clients = {} # Dictionary of MQTT clients
+        self.data_to_write = {} # Dict of format {table_name: [(value 1, value 2), ...]} for writing to database in batches
     
     def addClient(self, client_name, broker, port, on_connect, on_message, tls=True, client_id="", username=None, password=None, protocol=paho.MQTTv5, subscriptions=[], userdata=None):
         try:
@@ -41,6 +42,25 @@ class RPi4:
 
     def addSensor(self, sensor_name: str, sensor: Sensor):
         self.sensors[sensor_name] = sensor
+
+    def getDataToWrite(self, table_name: str) -> list:
+        # Assign an empty list if table name doesn't exist yet
+        if table_name not in self.data_to_write:
+            self.data_to_write[table_name] = []  
+        return self.data_to_write[table_name]
+
+    def clearDataToWrite(self, table_name: str):
+        # Assign an empty list if table name doesn't exist yet
+        if table_name not in self.data_to_write:
+            self.data_to_write[table_name] = []
+        self.data_to_write[table_name].clear()
+
+    def insertDataToWrite(self, table_name: str, data: tuple):
+        # Assign an empty list if table name doesn't exist yet
+        if table_name not in self.data_to_write:
+            self.data_to_write[table_name] = []
+        self.data_to_write[table_name].append(data)
+
 
         
 
