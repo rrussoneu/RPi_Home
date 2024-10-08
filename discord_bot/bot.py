@@ -102,10 +102,10 @@ async def light_control(ctx, action: str):
         return
 
     if action.lower() == 'on':
-        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "turn on")
+        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "ON")
         await ctx.send("Fan is being turned ON.")
     elif action.lower() == 'off':
-        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "turn off")
+        mqtt_client.publish(BOT_LIVING_ROOM_FAN_CONTROL, "OFF")
         await ctx.send("Fan is being turned OFF.")
     else:
         await ctx.send("Unknown command. Use `!fan on` or `!fan off`.")
