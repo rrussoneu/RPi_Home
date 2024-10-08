@@ -40,14 +40,14 @@ def on_local_on_message(client, userdata, msg):
     temperature_sensor = userdata  # Get the sensor 
     command = msg.payload.decode()
     print(f"Received command: {command}")
-    if command == 'turn on':
+    if command == 'ON':
         with temperature_sensor.lock: # Lock for fan state access across threads
             if not temperature_sensor.fan_state:
                 temperature_sensor.fan_state = True
                 print("Fan set to on")
             else:
                 print("Fan is already ON")
-    elif command == 'turn off':
+    elif command == 'OFF':
         with temperature_sensor.lock:
             if temperature_sensor.fan_state:
                 temperature_sensor.fan_state = False
