@@ -23,16 +23,18 @@ HIVEMQ_PASSWORD = os.getenv('MQTT_PASSWORD')
 MOSQUITTO_BROKER = "localhost"  
 MOSQUITTO_PORT = 1883           
 
-# Topic mappings
+# Topic mappings for communication with bot
 local_to_remote_topic = {
-    HOME_DOOR_LIGHT_ALERT: BOT_DOOR_LIGHT_ALERT,
+    HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_DOOR_LIGHT_ALERT),
 }
 remote_to_local_topic = {
-    BOT_DOOR_LIGHT_CONTROL: HOME_DOOR_LIGHT_POWER
+    BOT_DOOR_LIGHT_CONTROL: ('Light: ', HOME_DOOR_LIGHT_POWER),
+    BOT_LIVING_ROOM_FAN_CONTROL: ('Fan: ', HOME_LIVING_ROOM_FAN)
 }
 
 non_relay_local_topics = [HOME_LIVING_ROOM_TEMP]
 
+# Set up database
 conn = sqlite3.connect('local_database.db', check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute('''CREATE TABLE IF NOT EXISTS temperature_readings (
@@ -45,56 +47,110 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS temperature_readings (
 conn.commit()
 conn.close()
 
+last_commands = {
+    HOME_DOOR_LIGHT_POWER : 'OFF', 
+    HOME_LIVING_ROOM_FAN: 'OFF'
+    }
 
 
 # Callback on Mosquitto message received 
 def on_local_message(client, userdata, msg):
     try:
 
+        # Get the Pi class stored in userdata to get the hive client for forwarding
         p = userdata
         hivemq_client = p.getClient('hivemq_client')
-        topic = msg.topic
         
-        conn = sqlite3.connect('local_database.db')
-        cursor = conn.cursor()
+        topic = msg.topic
 
         # If message needs to be forwarded to HiveMQ and bot
         if topic in local_to_remote_topic:
-            remote_topic = local_to_remote_topic[topic]
+            # Topic is stored in tuple[1]
+            remote_topic = local_to_remote_topic[topic][1]
+
+            # The content of the message remains the same
             payload = msg.payload.decode()
             print(f"Local Mosquitto message received: {topic} -> {payload}")
-            hivemq_client.publish(remote_topic, payload)
+
+            # Message would look something like 'Light: ON' depending on what is being forwarded
+            hivemq_client.publish(remote_topic, f"{local_to_remote_topic[topic][0]}{payload}")
             print(f"Forwarded message: {remote_topic} -> {payload}")
-            if topic == HOME_DOOR_LIGHT_ALERT:
-                client.publish(HOME_DOOR_LIGHT_POWER, payload)
-        else:
-            # Save the reading form the living room temp sensor into database
+            
+        # If it isn't being forwarded, it's a reading to put into the database
+        else: 
+            
+
+            # Save the reading from the living room temp sensor into database every 60 readings, and store in a list until batch insert
             if topic == HOME_LIVING_ROOM_TEMP:
+                
+                # Store as a tuple
+                table_name = 'temperature_readings'
                 data = json.loads(msg.payload.decode())
                 temperature = data['temperature']
                 humidity = data['humidity']
                 timestamp = data['timestamp']
-                cursor.execute("INSERT INTO temperature_readings (temperature, humidity, timestamp, source) VALUES (?, ?, ?, ?)", (temperature, humidity, timestamp, topic))
-                conn.commit()
-        conn.close()
+                
+                # Insert into the RPi4 class for storage
+                p.insertDataToWrite(table_name, (temperature, humidity, timestamp, topic))
+
+                # Do batch insert every 60 readings received - should be once per hour
+                if len(p.getDataToWrite) >= 60:
+                    try:
+                        # Returns a list of tuples
+                        data_to_insert = p.getDataToWrite(table_name)
+
+                        conn = sqlite3.connect('local_database.db')
+                        cursor = conn.cursor()
+
+                        cursor.executemany(f"""
+                            INSERT INTO {table_name} (temperature, humidity, timestamp, source) 
+                            VALUES (?, ?, ?, ?)
+                            """, data_to_insert)
+
+                        conn.commit()
+                        conn.close()
+
+                        # Clear up the list after an insert 
+                        p.clearDataToWrite(table_name) 
+                    except Exception as e:
+                        print(f"Error inserting temperature data: {e}")
+
+            
     except Exception as e:
         print(f"Exception in on_local_message: {e}")
 
-# Callback for when a message is received on the HiveMQ broker
+# Callback for when a message is received from the HiveMQ broker
 def on_hivemq_message(client, userdata, msg):
-    print("AFHDSHAFDSJFJ")
     try:
+        
+        # Get the Pi class stored in userdata to get the local mosquitto client for forwarding
         p = userdata
         local_client = p.getClient('local_mosquitto')
+
         topic = msg.topic
         payload = msg.payload.decode()
         print(f"HiveMQ message received: {topic} -> {payload}")
 
-        # If message needs to be forwarded to Mosquitto
+        # If message needs to be forwarded to Mosquitto to send a command
         if topic in remote_to_local_topic:
-            local_topic = remote_to_local_topic[topic]
-            local_client.publish(local_topic, payload)
-            print(f"Forwarded message to Mosquitto: {local_topic} -> {payload}")
+            
+            # Get the local topic and forward the message along
+            local_topic = remote_to_local_topic[topic][1]
+
+            # If device already in the state the command is trying to achieve (like trying to turn the light on but it's already on)
+            if last_commands[local_topic] == payload:
+                # Just send a message back
+                client.publish(BOT_GENERAL_ALERT, f"Already {payload}")
+            
+            # Otherwise send the command
+            else:
+                local_client.publish(local_topic, payload)
+            
+            # Adjust the most recent command
+            last_commands[local_topic] = payload 
+
+            #print(f"Forwarded message to Mosquitto: {local_topic} -> {payload}")
+
     except Exception as e:
         print(f"Exception in on_hivemq_message {e}")
 # Connection to local broker
@@ -114,6 +170,7 @@ def on_local_connect(client, userdata, flags, rc, properties=None):
             print(f"Failed to connect to Mosquitto MQTT broker, return code {rc}")
     except Exception as e:
         print(f"Exception in on_local_connect: {e}")
+
 # Connection to HiveMQ broker
 def on_hivemq_connect(client, userdata, flags, rc, properties=None):
     try:
