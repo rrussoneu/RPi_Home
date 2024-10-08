@@ -68,8 +68,14 @@ def on_local_message(client, userdata, msg):
             # Topic is stored in tuple[1]
             remote_topic = local_to_remote_topic[topic][1]
 
+            
+
             # The content of the message remains the same
             payload = msg.payload.decode()
+            
+            if topic in last_commands.keys():
+                last_commands[topic] = payload
+
             print(f"Local Mosquitto message received: {topic} -> {payload}")
 
             # Message would look something like 'Light: ON' depending on what is being forwarded
