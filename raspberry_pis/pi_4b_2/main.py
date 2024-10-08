@@ -28,7 +28,8 @@ local_to_remote_topic = {
     HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_DOOR_LIGHT_ALERT),
 }
 remote_to_local_topic = {
-    BOT_DOOR_LIGHT_CONTROL: ('Light: ', HOME_DOOR_LIGHT_POWER)
+    BOT_DOOR_LIGHT_CONTROL: ('Light: ', HOME_DOOR_LIGHT_POWER),
+    BOT_LIVING_ROOM_FAN_CONTROL: ('Fan: ', HOME_LIVING_ROOM_FAN)
 }
 
 non_relay_local_topics = [HOME_LIVING_ROOM_TEMP]
