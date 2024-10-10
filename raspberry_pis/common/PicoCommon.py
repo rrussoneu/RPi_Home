@@ -21,7 +21,6 @@ class PicoW:
 
         self.mqtt_callback = mqtt_callback if mqtt_callback else self.default_mqtt_callback
 
-        self.setup()
    
     def connect_to_wifi(self):
             self.wlan.active(True)
@@ -69,7 +68,7 @@ class PicoW:
    
 
 class PicoWLight(PicoW):
-    def __init__(self, device_id='', name='', server='', port=1883, topic='', wifi_ssid='', wifi_password=''):
+    def __init__(self, device_id='', name='', server='', port=1883, topic='', wifi_ssid='', wifi_password='',  mqtt_callback=None):
         super().__init__(
             device_id=device_id, 
             name=name, 
@@ -78,7 +77,7 @@ class PicoWLight(PicoW):
             mqtt_topic=topic, 
             wifi_ssid=wifi_ssid, 
             wifi_password=wifi_password, 
-            mqtt_callback=self.mqtt_callback
+            mqtt_callback=mqtt_callback
         )
         self.light_on = False
         
@@ -115,13 +114,12 @@ class PlantPico(PicoW):
         # For averaging readings
         self.readings = []
         self.average_interval = 30 * 60  # 30 minutes in seconds
-        self.reading_interval = self.average_interval / 10  # 3 minutes per reading
+        self.reading_interval = self.average_interval / 10  # 3 minute wait per reading
         self.last_average_time = time.time()
 
-    def mqtt_callback(self, topic, msg):
-        if topic.decode() == self.mqtt_topic and msg == b'done':
-            self.alert_sent = False
-
+        # Daily reset for alert
+        self.daily_reset_interval = 24 * 60 * 60  # 24 hours in seconds
+        self.last_daily_reset = time.time()
 
     # Sends to brain Pi for database writing
     def send_average_reading(self):
@@ -138,7 +136,12 @@ class PlantPico(PicoW):
         self.readings = []  
 
     def run(self):
-        """Main loop integrating sensor reading, averaging, and MQTT message handling."""
+        """
+            Main loop:
+                - Sensor reading
+                - Reading averaging
+            
+        """
         self.setup()
         while True:
             current_time = time.time()
@@ -148,36 +151,33 @@ class PlantPico(PicoW):
                 self.send_average_reading()
                 self.last_average_time = current_time
 
+            # Check if it's time to reset the alert flag
+            if current_time - self.last_daily_reset >= self.daily_reset_interval:
+                self.reset_alert_flag()
+                self.last_daily_reset = current_time
+
             # Turn on sensor and wait to stabilize
             self.power_pin.on()
-            time.sleep(2.5)
+            time.sleep(0.5)
 
             # Read sensor values
             analog_value = self.analog_pin.read_u16()
             digital_value = self.digital_pin.value()
 
-            # Append to readings for averaging
+            # Add to readings for averaging
             self.readings.append(analog_value)
             if len(self.readings) > 10:
-                self.readings.pop(0)  # Only the last 10 readings
+                self.readings.pop(0)  # Maintain only the last 10 readings
 
-            # print(f"Analog: {analog_value}, Digital: {digital_value}")
 
             # Check if plant needs watering
             if analog_value > 40000 and digital_value == 1 and not self.alert_sent:
-                self.send_mqtt_message(self.mqtt_topic, "water")
+                self.send_mqtt_message(self.mqtt_topic, "Water plant!")
                 self.alert_sent = True
                 print("Alert sent: Water plant!")
 
             # Turn off sensor to prevent electrolysis
             self.power_pin.off()
-
-            # Handle incoming messages
-            try:
-                self.mqtt_client.check_msg()
-            except OSError as e:
-                print("Connection lost. Reconnecting...")
-                self.reconnect_mqtt()
 
             # Wait before the next reading
             time.sleep(self.reading_interval)
