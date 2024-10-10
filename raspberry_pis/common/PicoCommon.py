@@ -2,8 +2,23 @@ from machine import ADC, Pin
 import time
 from umqtt.simple import MQTTClient
 
+# To Do:
+#  - Switch to this MQTT library https://github.com/peterhinch/micropython-mqtt
+#  - Add status checking with Tasmota
+
 class PicoW:
-    def __init__(self, device_id='', name='', mqtt_server='', mqtt_port=1883, mqtt_topic='', wifi_ssid='', wifi_password='', mqtt_callback=None):
+    def __init__(
+        self, 
+        device_id='', 
+        name='', 
+        mqtt_server='', 
+        mqtt_port=1883, 
+        mqtt_topic='', 
+        wifi_ssid='', 
+        wifi_password='', 
+        mqtt_callback=None
+    ):
+
         # Unique ID and name, maybe just go to name 
         self.device_id = device_id
         self.name = name
@@ -48,6 +63,7 @@ class PicoW:
             topic = self.mqtt_topic
         try:
             self.mqtt_client.publish(topic, message)
+
         except OSError as e:
             print("Error publishing message, attempting to reconnect")
             self.reconnect_mqtt()
@@ -68,7 +84,17 @@ class PicoW:
    
 
 class PicoWLight(PicoW):
-    def __init__(self, device_id='', name='', server='', port=1883, topic='', wifi_ssid='', wifi_password='',  mqtt_callback=None):
+    def __init__(
+        self, 
+        device_id='', 
+        name='', 
+        server='',
+        port=1883,
+        topic='', 
+        wifi_ssid='', 
+        wifi_password='',  
+        mqtt_callback=None
+    ):
         super().__init__(
             device_id=device_id, 
             name=name, 
@@ -79,6 +105,7 @@ class PicoWLight(PicoW):
             wifi_password=wifi_password, 
             mqtt_callback=mqtt_callback
         )
+
         self.light_on = False
         
     # Callback for light on vs off
@@ -89,9 +116,94 @@ class PicoWLight(PicoW):
             elif msg == b'OFF' and self.light_on:
                 self.light_on = False
 
+class MotionLightPico(PicoWLight):
+    def __init__(
+        self,
+        pir_pin,
+        device_id='',
+        name='',
+        server='',
+        port=1883,
+        topic='',
+        wifi_ssid='PUTHERE',
+        wifi_password='PUTHERE',
+        mqtt_callback=None,
+        cooldown_period=45
+    ):
+        super().__init__(
+            device_id=device_id,
+            name=name,
+            server=server,
+            port=port,
+            topic=topic,
+            wifi_ssid=wifi_ssid,
+            wifi_password=wifi_password,
+            mqtt_callback=mqtt_callback
+        )
+        
+        # Initialize the PIR motion sensor
+        self.pir = Pin(pir_pin, Pin.IN)
+        
+        # Cooldown management
+        self.cooldown_period = cooldown_period  # In seconds
+        self.last_motion_time = 0
+        self.in_cooldown = False
+
+    def mqtt_callback(self, topic, msg):
+        super().mqtt_callback(topic, msg)
+
+
+    def run(self):
+        """
+            Main Loop:
+                - Sense motion
+                - Turn light on or off
+        """
+        self.setup()
+        print("Starting motion main loop")
+        while True:
+            current_time = time.time()
+            try:
+                motion_detected = self.pir.value() == 1
+                if motion_detected and not self.in_cooldown:
+                    print("Motion detected")
+                    self.last_motion_time = current_time
+                    if not self.light_on:
+                        self.send_mqtt_message("ON")
+                        self.light_on = True
+                        self.in_cooldown = True
+                        print("Light turned ON")
+                    else:
+                        self.send_mqtt_message("OFF")
+                        self.light_on = False
+                        self.in_cooldown = True
+                        print("Light turned OFF")
+                elif self.in_cooldown and (current_time - self.last_motion_time > self.cooldown_period):
+                    self.in_cooldown = False
+                    print("Cooldown period ended")
+
+                # Check for new MQTT messages
+                self.mqtt_client.check_msg()
+            except OSError as e:
+                print("MQTT connection lost. Attempting to reconnect...")
+                self.reconnect_mqtt()
+
+            time.sleep(0.1)  # Small delay to avoid busy loop
+
+
 
 class PlantPico(PicoW):
-    def __init__(self, device_id='', name='', mqtt_server='', mqtt_port=1883, mqtt_topic='', wifi_ssid='', wifi_password=''):
+    def __init__(
+        self, 
+        device_id='', 
+        name='', 
+        mqtt_server='', 
+        mqtt_port=1883, 
+        mqtt_topic='', 
+        wifi_ssid='', 
+        wifi_password=''
+    ):
+        
         super().__init__(
             device_id=device_id,
             name=name,
@@ -139,8 +251,7 @@ class PlantPico(PicoW):
         """
             Main loop:
                 - Sensor reading
-                - Reading averaging
-            
+                - Reading averaging  
         """
         self.setup()
         while True:
