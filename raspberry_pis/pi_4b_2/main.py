@@ -25,11 +25,15 @@ MOSQUITTO_PORT = 1883
 
 # Topic mappings for communication with bot
 local_to_remote_topic = {
-    HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_DOOR_LIGHT_ALERT),
+    HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_GENERAL_ALERT),
+    HOME_ALERTS : ('Alert: ', BOT_GENERAL_ALERT),
+    HOME_BONSAI : ('Water plant!', BOT_GENERAL_ALERT)
 }
 remote_to_local_topic = {
     BOT_DOOR_LIGHT_CONTROL: ('Light: ', HOME_DOOR_LIGHT_POWER),
-    BOT_LIVING_ROOM_FAN_CONTROL: ('Fan: ', HOME_LIVING_ROOM_FAN)
+    BOT_LIVING_ROOM_FAN_CONTROL: ('Fan: ', HOME_LIVING_ROOM_FAN),
+    BOT_LIVING_ROOM_LAMP_CONTROL: ('Light: ', HOME_LIVING_ROOM_LAMP_POWER),
+    BOT_BEDROOM_LAMP_CONTROL: ('Light: ', HOME_BEDROOM_LAMP_POWER),
 }
 
 non_relay_local_topics = [HOME_LIVING_ROOM_TEMP]
@@ -67,8 +71,6 @@ def on_local_message(client, userdata, msg):
         if topic in local_to_remote_topic:
             # Topic is stored in tuple[1]
             remote_topic = local_to_remote_topic[topic][1]
-
-            
 
             # The content of the message remains the same
             payload = msg.payload.decode()

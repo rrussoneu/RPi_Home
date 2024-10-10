@@ -35,8 +35,6 @@ mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 def on_connect(client, userdata, flags, rc, properties=None):
     if rc == 0:
         print("Connected to MQTT Broker")
-        client.subscribe(BOT_DOOR_LIGHT_ALERT)
-        client.subscribe(BOT_LIVING_ROOM_TEMP_ALERT)
         client.subscribe(BOT_GENERAL_ALERT)
         
     else:
