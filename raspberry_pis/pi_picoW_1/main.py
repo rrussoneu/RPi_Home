@@ -1,7 +1,6 @@
 from PicoCommon import MotionLightPico
 
-
-# Main logic for motion detection
+# Init pico and run!
 def main():
     motion_light_pico = MotionLightPico(
         device_id="0",

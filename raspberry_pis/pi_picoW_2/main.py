@@ -3,7 +3,7 @@ import time
 from umqtt.simple import MQTTClient
 from PicoCommon import PlantPico
 
-
+# Init plant pico and run!
 def main():
     pico = PlantPico(
         device_id="p2",
