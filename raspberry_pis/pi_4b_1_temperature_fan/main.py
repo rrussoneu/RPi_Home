@@ -67,30 +67,6 @@ def hivemq_on_connect(client, userdata, flags, rc, properties=None):
 # On message for HiveMQ - now the other pi handles the forwarding for simplicity
 def hivemq_on_message(client, userdata, msg):
     pass
-    '''
-        global FAN_STATE
-        command = msg.payload.decode()
-        p = userdata
-        local_client = p.getClient('local_mosquitto')
-        print(f"Received command: {command}")
-        if command == 'turn on':
-            if not FAN_STATE:
-                FAN_STATE = True
-                print("Fan turned ON")
-                local_client.publish(HOME_LIVING_ROOM_FAN, "ON")
-            else:
-                print("Fan is already ON")
-        elif command == 'turn off':
-            if FAN_STATE:
-                FAN_STATE = False
-                print("Fan turned OFF")
-                local_client.publish(HOME_LIVING_ROOM_FAN, "OFF")
-            else:
-                print("Fan is already OFF")
-    '''
-
-
-
 
 def main():
         # Database Set Up
@@ -120,7 +96,7 @@ def main():
     local_client = pi.getClient('local_mosquitto')
     local_client.user_data_set(temperature_sensor)
 
-    temperature_sensor.run(data_clients={REAL_TIME_LIVING_ROOM_TEMP: pi.getClient('hivemq_client')}, threshold=TEMP_THRESHOLD, high_threshold=TEMP_HIGH_THRESHOLD, alert_client=pi.getClient('hivemq_client'), alert_topic=BOT_LIVING_ROOM_TEMP_ALERT, local_client=pi.getClient('local_mosquitto'), local_topic=HOME_LIVING_ROOM_TEMP)
+    temperature_sensor.run(data_clients={REAL_TIME_LIVING_ROOM_TEMP: pi.getClient('hivemq_client')}, threshold=TEMP_THRESHOLD, high_threshold=TEMP_HIGH_THRESHOLD, alert_client=pi.getClient('local_mosquitto'), alert_topic=HOME_ALERTS, local_client=pi.getClient('local_mosquitto'), local_topic=HOME_LIVING_ROOM_TEMP)
     
     while True:
         time.sleep(1)
