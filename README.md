@@ -2,12 +2,12 @@
 
 ## Welcome!
 
-Thanks for checking out my smart home project! This project can transform your apartment into a smart home using a few types of Raspberry Pi's and various IoT devices.
+Thanks for checking out my smart home project! The project uses a few types of Raspberry Pi's and various IoT devices to turn an apartment into a DIY smart home.
 
 ## Overview 
 
 ### Background
-For a little background, this project began as a way to just turn on a fan when it got hot. I wanted to get a notifcation when it got too hot at home when I was out and a way to turn on a fan to help lower the temperature for my dog while I'm not home. I had a Raspberry Pi sitting around, so I attached a temperature sensor, and then made a Discord bot to alert me. I deployed the bot on Heroku and used HiveMQ for an MQTT broker. Next, I bought a Sonoff R2, soldered on some headers, flashed it with Tasmota, attached a box fan, set up a local Mosquitto server for MQTT communication between the R2 and Raspberry Pi, looped in some commands to the bot, and I had my working pipeline. 
+For a little background, this project began as a way to just turn on a fan when it got hot. I wanted to get a notifcation when it got too hot at home while I was out and way to turn on a fan to help lower the temperature for my dog. I had a Raspberry Pi sitting around, so I attached a temperature sensor, and then made a Discord bot to alert me. I deployed the bot on Heroku and used HiveMQ for an MQTT broker. Next, I bought a Sonoff R2, soldered on some headers, flashed it with Tasmota, attached a box fan, set up a local Mosquitto server for MQTT communication between the R2 and Raspberry Pi, looped in some commands to the bot, and I had an initial working pipeline. 
 
 ### Current Set Up
 
@@ -46,6 +46,7 @@ To Do List:
 - Medium Term:
     - Use a hosted database for a central source of data / make API
     - Make a dashboard for computer with graphs, command options, etc.
+    - Create a mobile app, specifically for an old phone to use as a remote control
 
 
 If you have any ideas for further expansions or improvements, please let me know!
