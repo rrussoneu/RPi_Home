@@ -38,12 +38,15 @@ After getting my original idea set up, I got working on, and am actively adding 
 ### Next Up
 Stay tuned for additional functionalities added, and feel free to use this code base for your own smart home.
 
-To Do List:
+In progress/ to do List:
+- Right Now:
+    - Add voice assistant and Spotify integration
+
 - Short Term:
     - Clean up the Pi 4 code and topics
     - Add camera to the device list
     
-- Medium Term:
+- Medium To Longer Term:
     - Use a hosted database for a central source of data / make API
     - Make a dashboard for computer with graphs, command options, etc.
     - Create a mobile app, specifically for an old phone to use as a remote control
