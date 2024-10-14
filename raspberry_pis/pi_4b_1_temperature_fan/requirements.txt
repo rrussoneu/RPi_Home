@@ -3,3 +3,6 @@ paho-mqtt
 adafruit-circuitpython-dht
 adafruit-circuitpython-ssd1306
 Pillow
+flask
+rhasspy-hermes
+pvporcupine
