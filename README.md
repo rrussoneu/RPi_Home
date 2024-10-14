@@ -27,10 +27,14 @@ After getting my original idea set up, I got working on, and am actively adding 
     - "Blueberry" uses Porcupine for a wake word ("blueberry") and either sends a command to a device or sends a prompt to the OpenAI API. The set up right now is pretty rinky dink but I plan on adding some better animatronics once I get the parts. 
     - Below are videos demonstrating the command capability and LLM capability. The speakers were just the cheapest ones I could find, so there is some constant noise.
 
-<iframe width="320" height="240" src="https://www.youtube.com/embed/_I6u_fgEbGU" frameborder="0" allowfullscreen></iframe>
-
-<iframe width="320" height="240" src="https://www.youtube.com/embed/dUyqKlosVTQ" frameborder="0" allowfullscreen></iframe>
-
+<div style="display: flex; justify-content: center;">
+  <a href="https://www.youtube.com/shorts/_I6u_fgEbGU" style="margin-right: 10px;">
+    <img src="https://img.youtube.com/vi/_I6u_fgEbGU/0.jpg" alt="BLUEBERRY_JOKE" width="200">
+  </a>
+  <a href="https://www.youtube.com/shorts/dUyqKlosVTQ">
+    <img src="https://img.youtube.com/vi/dUyqKlosVTQ/0.jpg" alt="BLUEBERRY_LIGHT" width="200">
+  </a>
+</div>
 - Pico W with a motion sensor by my door is used to turn on a lamp connected to a Sonoff R2 when I get home and when I leave
     - The lamp is also commandable from the bot
 
