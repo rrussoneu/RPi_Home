@@ -1,3 +1,5 @@
 python-dotenv
 paho-mqtt
 adafruit-circuitpython-dht
+adafruit-circuitpython-ssd1306
+Pillow
