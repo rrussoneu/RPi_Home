@@ -25,7 +25,7 @@ After getting my original idea set up, I got working on, and am actively adding 
 - Second Pi 4b that gets temperature readings and sends alerts based on them. This also runs the home assistant "Blueberry".
     - Stores its data in a local SQLite database while also sending it to the brain Pi for backup storage
     - "Blueberry" uses Porcupine for a wake word ("blueberry") and either sends a command to a device or sends a prompt to the OpenAI API. The set up right now is pretty rinky dink but I plan on adding some better animatronics once I get the parts. 
-    - Below are videos demonstrating the command capability and LLM capability. The speakers were just the cheapest ones I could find, so there is some constant noise.
+    - Below are videos demonstrating the commands/ LLM integration. The speakers were just the cheapest ones I could find, so there is some constant noise.
 
 <div style="display: flex; justify-content: center;">
   <a href="https://www.youtube.com/shorts/_I6u_fgEbGU" style="margin-right: 10px;">
@@ -50,9 +50,14 @@ After getting my original idea set up, I got working on, and am actively adding 
 Stay tuned for additional functionalities added, and feel free to use this code base for your own smart home.
 
 To Do List:
+- Right Now:
+    - Continue to expand the virtual assistant 
+    - Clean up the Pi 4b with assistant and temperature sensor to run with the same script
+
 - Short Term:
     - Clean up the Pi 4 code and topics
     - Add camera to the device list
+    - Add animatronics for assistant
     
 - Medium Term:
     - Use a hosted database for a central source of data / make API
