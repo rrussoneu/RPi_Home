@@ -13,3 +13,4 @@ numpy
 luma.oled
 luma.core
 pyaudio
+pydub
