@@ -2,7 +2,9 @@
 
 ## Welcome!
 
-Thanks for checking out my smart home project! This project can transform your apartment into a smart home using a few types of Raspberry Pi's and various IoT devices.
+Thanks for checking out my smart home project! This project uses a few types of Raspberry Pi's and IoT devices to create a DIY smart home and assistant, "Blueberry".
+
+<img src="res/blueberry_front.jpg" width="300" height="300" title="blueberry_front"> | <img src="res/blueberry_inside.jpg" width="300" height="300" title="blueberry_inside"> 
 
 ## Overview 
 
@@ -20,9 +22,14 @@ After getting my original idea set up, I got working on, and am actively adding 
     - Also has a local SQLite database to back up data readings
 
 
-- Second Pi 4b that gets temperature readings and sends alerts based on them
+- Second Pi 4b that gets temperature readings and sends alerts based on them. This also runs the home assistant "Blueberry".
     - Stores its data in a local SQLite database while also sending it to the brain Pi for backup storage
+    - "Blueberry" uses Porcupine for a wake word ("blueberry") and either sends a command to a device or sends a prompt to the OpenAI API. The set up right now is pretty rinky dink but I plan on adding some better animatronics once I get the parts. 
+    - Below are videos demonstrating the command capability and LLM capability. The speakers were just the cheapest ones I could find, so there is some constant noise.
 
+<iframe width="320" height="240" src="https://www.youtube.com/embed/_I6u_fgEbGU" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="320" height="240" src="https://www.youtube.com/embed/dUyqKlosVTQ" frameborder="0" allowfullscreen></iframe>
 
 - Pico W with a motion sensor by my door is used to turn on a lamp connected to a Sonoff R2 when I get home and when I leave
     - The lamp is also commandable from the bot
