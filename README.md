@@ -40,7 +40,10 @@ Stay tuned for additional functionalities added, and feel free to use this code 
 
 In progress/ to do List:
 - Right Now:
-    - Add voice assistant and Spotify integration
+    - Add voice assistant
+       - Goal is to use rhasspy for commands like turn on the light, and send unknown intents as prompts to an LLM
+       - Currently working on getting the intent recognition to work with a default/ fallback option which could be used to send a prompt
+       - If there's a response, a small (1.3 inch) oled screen will be used to visualize the audio waveform for a nice little animatronic effect
 
 - Short Term:
     - Clean up the Pi 4 code and topics
