@@ -6,5 +6,5 @@ test_files/test_llm.py
 test_files/test_spotify.py
 test_files/intents.json
 test_files/test_rhasspy.py
-
-
+*.wav
+*.mp3
