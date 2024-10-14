@@ -6,3 +6,10 @@ Pillow
 flask
 rhasspy-hermes
 pvporcupine
+openai
+gTTS
+pygame
+numpy
+luma.oled
+luma.core
+pyaudio
