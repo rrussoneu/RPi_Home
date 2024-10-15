@@ -165,3 +165,4 @@ cython_debug/
 *.db
 
 .env.save
+raspberry_pis/pi_4b_1_temperature_fan/test_files/test_rhasspy.py

@@ -37,6 +37,13 @@ class RPi4:
     def getClient(self, name: str) -> Client:
         return self.mqtt_clients[name]
 
+    @staticmethod
+    def publishMessage(client: Client, topic: str, message: str):
+        try:
+            client.publish(topic=topic, payload=message)
+        except RuntimeError as error:
+            print(f"Sensor error: {error}")
+
     def sensorRead(self, sensor_name: str, clients: dict[str, Client]):
         self.sensors[sensor_name].readData(clients)
 

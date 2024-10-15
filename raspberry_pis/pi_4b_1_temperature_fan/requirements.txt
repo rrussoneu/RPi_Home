@@ -3,3 +3,14 @@ paho-mqtt
 adafruit-circuitpython-dht
 adafruit-circuitpython-ssd1306
 Pillow
+flask
+rhasspy-hermes
+pvporcupine
+openai
+gTTS
+pygame
+numpy
+luma.oled
+luma.core
+pyaudio
+pydub
