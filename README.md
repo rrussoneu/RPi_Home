@@ -2,14 +2,16 @@
 
 ## Welcome!
 
+
 Thanks for checking out my smart home project! This project uses a few types of Raspberry Pi's and IoT devices to create a DIY smart home and assistant, "Blueberry".
 
 <img src="res/blueberry_front.jpg" width="300" height="300" title="blueberry_front"> | <img src="res/blueberry_inside.jpg" width="300" height="300" title="blueberry_inside"> 
 
+
 ## Overview 
 
 ### Background
-For a little background, this project began as a way to just turn on a fan when it got hot. I wanted to get a notifcation when it got too hot at home when I was out and a way to turn on a fan to help lower the temperature for my dog while I'm not home. I had a Raspberry Pi sitting around, so I attached a temperature sensor, and then made a Discord bot to alert me. I deployed the bot on Heroku and used HiveMQ for an MQTT broker. Next, I bought a Sonoff R2, soldered on some headers, flashed it with Tasmota, attached a box fan, set up a local Mosquitto server for MQTT communication between the R2 and Raspberry Pi, looped in some commands to the bot, and I had my working pipeline. 
+For a little background, this project began as a way to just turn on a fan when it got hot. I wanted to get a notifcation when it got too hot at home while I was out and way to turn on a fan to help lower the temperature for my dog. I had a Raspberry Pi sitting around, so I attached a temperature sensor, and then made a Discord bot to alert me. I deployed the bot on Heroku and used HiveMQ for an MQTT broker. Next, I bought a Sonoff R2, soldered on some headers, flashed it with Tasmota, attached a box fan, set up a local Mosquitto server for MQTT communication between the R2 and Raspberry Pi, looped in some commands to the bot, and I had an initial working pipeline. 
 
 ### Current Set Up
 
@@ -55,14 +57,17 @@ To Do List:
     - Continue to expand the virtual assistant 
     - Clean up the Pi 4b with assistant and temperature sensor to run with the same script
 
+
+
 - Short Term:
     - Clean up the Pi 4 code and topics
     - Add camera to the device list
     - Add animatronics for assistant
     
-- Medium Term:
+- Medium To Longer Term:
     - Use a hosted database for a central source of data / make API
     - Make a dashboard for computer with graphs, command options, etc.
+    - Create a mobile app, specifically for an old phone to use as a remote control
 
 
 If you have any ideas for further expansions or improvements, please let me know!
