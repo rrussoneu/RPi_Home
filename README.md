@@ -24,7 +24,7 @@ After getting my original idea set up, I got working on, and am actively adding 
 
 - Second Pi 4b that gets temperature readings and sends alerts based on them. This also runs the home assistant "Blueberry".
     - Stores its data in a local SQLite database while also sending it to the brain Pi for backup storage
-    - "Blueberry" uses Porcupine for a wake word ("blueberry") and either sends a command to a device or sends a prompt to the OpenAI API. The set up right now is pretty rinky dink but I plan on adding some better animatronics once I get the parts. 
+    - "Blueberry" uses Porcupine for a wake word ("blueberry") and anaylzes the speech using the OpenAI speech to text API. It then either sends a command to a device or sends a prompt back to the OpenAI text generation API. The physical set up right now is pretty rinky dink but I plan on adding some better animatronics once I get the parts. 
     - Below are videos demonstrating the commands/ LLM integration. The speakers were just the cheapest ones I could find, so there is some constant noise.
 
 <div style="display: flex; justify-content: center;">
