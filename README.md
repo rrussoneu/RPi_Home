@@ -35,6 +35,7 @@ After getting my original idea set up, I got working on, and am actively adding 
     <img src="https://img.youtube.com/vi/dUyqKlosVTQ/0.jpg" alt="BLUEBERRY_LIGHT" width="200">
   </a>
 </div>
+
 - Pico W with a motion sensor by my door is used to turn on a lamp connected to a Sonoff R2 when I get home and when I leave
     - The lamp is also commandable from the bot
 
