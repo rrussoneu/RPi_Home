@@ -16,7 +16,7 @@ For a little background, this project began as a way to just turn on a fan when 
 #### Devices
 After getting my original idea set up, I got working on, and am actively adding pieces to, other components to turn my apartment into a DIY smart home. You can see this diagram for a general overview of the current set up
 
-<img src="res/diagram.png" width="400" height="250" title="Current Set Up">
+<img src="res/diagram.jpg" width="400" height="250" title="Current Set Up">
 
  - One Raspberry Pi 4b that hosts the local Mosquitto server and handles the commands from the Discord bot
     - Also has a local SQLite database to back up data readings
