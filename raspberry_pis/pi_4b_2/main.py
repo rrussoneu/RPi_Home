@@ -25,9 +25,8 @@ MOSQUITTO_PORT = 1883
 
 # Topic mappings for communication with bot
 local_to_remote_topic = {
-    HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_GENERAL_ALERT),
+    HOME_DOOR_LIGHT_POWER: ('Light: ', BOT_GENERAL_ALERT), # Relay the door light turning on or off because it could come from motion detector
     HOME_ALERTS : ('Alert: ', BOT_GENERAL_ALERT),
-    HOME_BONSAI : ('Water plant!', BOT_GENERAL_ALERT)
 }
 remote_to_local_topic = {
     BOT_DOOR_LIGHT_CONTROL: ('Light: ', HOME_DOOR_LIGHT_POWER),
