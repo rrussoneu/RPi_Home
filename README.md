@@ -55,8 +55,6 @@ Stay tuned for additional functionalities added, and feel free to use this code 
 To Do List:
 - Right Now:
     - Continue to expand the virtual assistant 
-    - Clean up the Pi 4b with assistant and temperature sensor to run with the same script
-
 
 
 - Short Term:
