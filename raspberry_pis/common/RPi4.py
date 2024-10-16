@@ -3,6 +3,7 @@ from paho.mqtt.client import Client
 import paho.mqtt.client as paho
 from common.Sensor import Sensor
 import ssl
+import sqlite3
 
 class RPi4:
     def __init__(self, device_id, name):
@@ -68,11 +69,40 @@ class RPi4:
             self.data_to_write[table_name] = []
         self.data_to_write[table_name].append(data)
 
-
+    def insertBatch(self, table_name, columns):
+        # Inserts a batch of data into the specified table.
         
+        try:
+            # Retrieve data to insert
+            data_to_insert = self.getDataToWrite(table_name)
+            
+            if not data_to_insert:
+                print("No data available to insert.")
+                return
 
+            # Create placeholders based on the number of columns and join the columns
+            placeholders = ", ".join(["?"] * len(columns))
+            columns_joined = ", ".join(columns)
 
+            # Construct the SQL query
+            sql_query = f"INSERT INTO {table_name} ({columns_joined}) VALUES ({placeholders})"
+
+            # Handle the connection and cursor
+            with sqlite3.connect('local_database.db') as conn:
+                cursor = conn.cursor()
+                cursor.executemany(sql_query, data_to_insert)
+                conn.commit()
+
+            # Clear the data after successful insertion
+            self.clearDataToWrite(table_name)
+            print(f"Inserted {len(data_to_insert)} rows into '{table_name}'.")
         
+        except sqlite3.Error as e:
+            print(f"SQLite error inserting into '{table_name}': {e}")
+        except Exception as e:
+            print(f"Error inserting into '{table_name}': {e}")
+
+            
 
 
 
