@@ -289,8 +289,9 @@ def check_command(prompt_text, client):
     else:
         return False
 
-def main():
 
+def run_assistant(pi):
+    '''
     pi = RPi4(device_id=1, name="living_room_pi")
     pi.addClient(
         "local_client", 
@@ -301,7 +302,7 @@ def main():
         tls=False, 
         client_id=""
         )
-
+    '''
 
     handle = pvporcupine.create(access_key=access_key, keywords=['blueberry'])
     try:
@@ -342,6 +343,3 @@ def main():
     finally:
         handle.delete()
         clear_display()
-
-if __name__ == "__main__":
-    main()

@@ -9,6 +9,7 @@ from common.topics import *
 import time
 import os
 from dotenv import load_dotenv
+from run_assistant import run_assistant
 
 load_dotenv()
 
@@ -98,6 +99,10 @@ def main():
 
     temperature_sensor.run(data_clients={REAL_TIME_LIVING_ROOM_TEMP: pi.getClient('hivemq_client')}, threshold=TEMP_THRESHOLD, high_threshold=TEMP_HIGH_THRESHOLD, alert_client=pi.getClient('local_mosquitto'), alert_topic=HOME_ALERTS, local_client=pi.getClient('local_mosquitto'), local_topic=HOME_LIVING_ROOM_TEMP)
     
+    # Run the assistant on another thread
+    assistant_thread = threading.Thread(target=run_assistant, args=(pi,))
+    assistant_thread.start()
+
     while True:
         time.sleep(1)
 
