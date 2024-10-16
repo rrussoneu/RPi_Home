@@ -41,12 +41,8 @@ def on_connect(client, userdata, flags, rc, properties=None):
         print(f"Failed to connect to MQTT Broker, return code {rc}")
 
 def on_message(client, userdata, msg):
-    # Maybe add some custom logic later hence the split up
-    if msg.topic == BOT_DOOR_LIGHT_ALERT:
-        alert_message = msg.payload.decode()
-        print(f"Received alert: {alert_message}")
-        asyncio.run_coroutine_threadsafe(send_alert(alert_message), bot.loop)
-    elif msg.topic == BOT_LIVING_ROOM_TEMP_ALERT:
+    # Maybe add some custom logic later 
+    if msg.topic == BOT_GENERAL_ALERT:
         alert_message = msg.payload.decode()
         print(f"Received alert: {alert_message}")
         asyncio.run_coroutine_threadsafe(send_alert(alert_message), bot.loop)
