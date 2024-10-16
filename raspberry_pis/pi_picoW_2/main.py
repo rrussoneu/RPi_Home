@@ -10,7 +10,7 @@ def main():
         name="PlantPico1",
         mqtt_server='10.0.0.170',
         mqtt_port=1883,
-        mqtt_topic="home/bonsai/alert",
+        mqtt_topic='local/home/alerts',
         wifi_ssid='wifihere',
         wifi_password='wifihere'
     )
