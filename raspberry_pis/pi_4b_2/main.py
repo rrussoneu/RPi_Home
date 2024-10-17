@@ -52,7 +52,7 @@ create_moisture_table_query = '''
     CREATE TABLE IF NOT EXISTS moisture_readings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        moisture INTEGER
+        reading INTEGER
         source TEXT
     )
     '''
@@ -131,7 +131,7 @@ def on_local_message(client, userdata, msg):
                 res = data.split("-")
                 p.insertDataToWrite(table_name, tuple(res))
                 if len(p.getDataToWrite(table_name)) >= 12: # Every 6 hours for the plant picos
-                    p.insertBatch(table_name, ["plant_device", "reading"])
+                    p.insertBatch(table_name, ["source", "reading"])
             
     except Exception as e:
         print(f"Exception in on_local_message: {e}")
