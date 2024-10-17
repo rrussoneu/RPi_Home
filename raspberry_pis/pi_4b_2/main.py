@@ -47,13 +47,25 @@ create_table_query = '''
         source TEXT
     )
     '''
+
+create_moisture_table_query = '''
+    CREATE TABLE IF NOT EXISTS moisture_readings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        moisture INTEGER
+        source TEXT
+    )
+    '''
     
 try:
     with sqlite3.connect('local_database.db', check_same_thread=False) as conn:
         cursor = conn.cursor()
         cursor.execute(create_table_query)
+        cursor.execute
         conn.commit()
         print("Created temperature table")
+
+
 except sqlite3.Error as e:
     print(f"SQLite error during temperature table creation: {e}")
 except Exception as e:
@@ -112,7 +124,14 @@ def on_local_message(client, userdata, msg):
                 # Do batch insert every 60 readings received - should be once per hour
                 if len(p.getDataToWrite(table_name)) >= 60:
                     p.insertBatch(table_name, ["temperature", "humidity", "timestamp", "source"])
-
+            
+            if topic == HOME_PLANT_READINGS:
+                table_name = 'moisture_readings'
+                data = msg.payload.decode()
+                res = data.split("-")
+                p.insertDataToWrite(table_name, tuple(res))
+                if len(p.getDataToWrite(table_name)) >= 12: # Every 6 hours for the plant picos
+                    p.insertBatch(table_name, ["plant_device", "reading"])
             
     except Exception as e:
         print(f"Exception in on_local_message: {e}")
