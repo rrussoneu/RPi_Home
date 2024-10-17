@@ -1,6 +1,8 @@
 from machine import ADC, Pin
 import time
 from umqtt.simple import MQTTClient
+from topics import HOME_PLANT_READINGS
+import json
 
 # To Do:
 #  - Switch to this MQTT library https://github.com/peterhinch/micropython-mqtt
@@ -241,8 +243,8 @@ class PlantPico(PicoW):
         
         # Send average reading
         average_analog = sum(self.readings) / len(self.readings)
-        message = f"{average_analog:.2f}"
-        self.send_mqtt_message(self.mqtt_topic, message)
+        message = f"{self.name}-{average_analog:.2f}"
+        self.send_mqtt_message(HOME_PLANT_READINGS, message)
 
         # Reset readings
         self.readings = []  

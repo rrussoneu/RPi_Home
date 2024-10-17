@@ -37,18 +37,39 @@ remote_to_local_topic = {
 
 non_relay_local_topics = [HOME_LIVING_ROOM_TEMP]
 
-# Set up database
-conn = sqlite3.connect('local_database.db', check_same_thread=False)
-cursor = conn.cursor()
-cursor.execute('''CREATE TABLE IF NOT EXISTS temperature_readings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    temperature REAL,
-    humidity REAL,
-    source TEXT
-)''')
-conn.commit()
-conn.close()
+# Set up db
+create_table_query = '''
+    CREATE TABLE IF NOT EXISTS temperature_readings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        temperature REAL,
+        humidity REAL,
+        source TEXT
+    )
+    '''
+
+create_moisture_table_query = '''
+    CREATE TABLE IF NOT EXISTS moisture_readings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        reading INTEGER
+        source TEXT
+    )
+    '''
+    
+try:
+    with sqlite3.connect('local_database.db', check_same_thread=False) as conn:
+        cursor = conn.cursor()
+        cursor.execute(create_table_query)
+        cursor.execute
+        conn.commit()
+        print("Created temperature table")
+
+
+except sqlite3.Error as e:
+    print(f"SQLite error during temperature table creation: {e}")
+except Exception as e:
+    print(f"Error during temperatur etable creation: {e}")
 
 last_commands = {
     HOME_DOOR_LIGHT_POWER : 'OFF', 
@@ -101,27 +122,16 @@ def on_local_message(client, userdata, msg):
                 p.insertDataToWrite(table_name, (temperature, humidity, timestamp, topic))
 
                 # Do batch insert every 60 readings received - should be once per hour
-                if len(p.getDataToWrite) >= 60:
-                    try:
-                        # Returns a list of tuples
-                        data_to_insert = p.getDataToWrite(table_name)
-
-                        conn = sqlite3.connect('local_database.db')
-                        cursor = conn.cursor()
-
-                        cursor.executemany(f"""
-                            INSERT INTO {table_name} (temperature, humidity, timestamp, source) 
-                            VALUES (?, ?, ?, ?)
-                            """, data_to_insert)
-
-                        conn.commit()
-                        conn.close()
-
-                        # Clear up the list after an insert 
-                        p.clearDataToWrite(table_name) 
-                    except Exception as e:
-                        print(f"Error inserting temperature data: {e}")
-
+                if len(p.getDataToWrite(table_name)) >= 60:
+                    p.insertBatch(table_name, ["temperature", "humidity", "timestamp", "source"])
+            
+            if topic == HOME_PLANT_READINGS:
+                table_name = 'moisture_readings'
+                data = msg.payload.decode()
+                res = data.split("-")
+                p.insertDataToWrite(table_name, tuple(res))
+                if len(p.getDataToWrite(table_name)) >= 12: # Every 6 hours for the plant picos
+                    p.insertBatch(table_name, ["source", "reading"])
             
     except Exception as e:
         print(f"Exception in on_local_message: {e}")

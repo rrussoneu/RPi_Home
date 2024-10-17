@@ -10,6 +10,7 @@ import time
 import os
 from dotenv import load_dotenv
 from run_assistant import run_assistant
+import threading
 
 load_dotenv()
 
