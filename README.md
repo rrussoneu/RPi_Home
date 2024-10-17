@@ -53,8 +53,9 @@ After getting my original idea set up, I got working on, and am actively adding 
 Stay tuned for additional functionalities added, and feel free to use this code base for your own smart home.
 
 To Do List:
-- Right Now:
-    - Continue to expand the virtual assistant 
+- Right Now/ In progress:
+    - Continue to expand the virtual assistant
+    - Make a dashboard for computer with graphs, command options, etc.
 
 
 - Short Term:
@@ -64,7 +65,6 @@ To Do List:
     
 - Medium To Longer Term:
     - Use a hosted database for a central source of data / make API
-    - Make a dashboard for computer with graphs, command options, etc.
     - Create a mobile app, specifically for an old phone to use as a remote control
 
 
