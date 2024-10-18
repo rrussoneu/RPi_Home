@@ -7,6 +7,7 @@
 #define DASHBOARD_LIGHT_H
 #include "CommandDevice.h"
 
+// Lights attach to rooms and have the general lights tab
 class Light : public CommandDevice {
 Q_OBJECT
 public:

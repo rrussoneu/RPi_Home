@@ -10,7 +10,7 @@
 class TemperatureSensor: public Sensor{
 public:
     TemperatureSensor(const QString& id, const QString& name, const QString& room) : Sensor(id, name, room) {
-        device_type = DeviceType::Temperature
+        device_type = DeviceType::Temperature;
     }
 
 };

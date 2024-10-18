@@ -6,6 +6,7 @@
 #define DASHBOARD_FAN_H
 #include "CommandDevice.h"
 
+// Fans should attach to the temperature widgets and rooms
 class Fan : public CommandDevice {
 Q_OBJECT
 public:
