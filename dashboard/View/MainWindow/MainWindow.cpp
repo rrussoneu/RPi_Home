@@ -11,12 +11,14 @@
 #include <QGraphicsDropShadowEffect>
 
 namespace Theme {
-    const QString Primary = "#2D3436";
-    const QString Secondary = "#636E72";
-    const QString Accent = "#00B894";
-    const QString Background = "#F5F6FA";
+    const QString Primary = "#7B2CBF";
+    const QString Secondary = "#9F7AEA";
+    const QString Accent = "#4C1D95";
+    const QString Background = "#F9F5FF";
     const QString CardBg = "#FFFFFF";
-    const QString Success = "#00B894";
+    const QString TextPrimary = "#4C1D95";
+    const QString TextSecondary = "#6B7280";
+    const QString Success = "#9F7AEA";
 
     const QString CardStyle = QString(
             "QFrame {"
@@ -31,18 +33,24 @@ namespace Theme {
             "    background-color: %1;"
             "    color: white;"
             "    border-radius: 10px;"
-            "    padding: 15px 5;"
+            "    padding: 15px 5px;"
             "    font-weight: bold;"
             "    font-size: 9px;"
             "    min-width: 75px;"
+            "    border: none;"
             "}"
             "QPushButton:hover {"
             "    background-color: %2;"
             "}"
             "QPushButton:checked {"
             "    background-color: %3;"
+            "    border: none;"
             "}"
-    ).arg(Secondary).arg(Primary).arg(Success);
+            "QPushButton:pressed {"
+            "    background-color: %3;"
+            "    border: none;"
+            "}"
+    ).arg(Secondary).arg(Primary).arg(Accent);
 }
 
 MainWindow::MainWindow(QWidget *parent)
@@ -58,7 +66,6 @@ void MainWindow::handleLightToggle(int lightIndex, bool isOn)
 {
     qDebug() << "Light" << lightIndex + 1 << (isOn ? "turned on" : "turned off");
 }
-
 QChartView* MainWindow::createChart(const QString &title)
 {
     auto chart = new QChart();
@@ -68,11 +75,12 @@ QChartView* MainWindow::createChart(const QString &title)
         series->append(i, QRandomGenerator::global()->bounded(100));
     }
 
-    series->setPen(QPen(QColor(Theme::Accent), 3));
+    series->setPen(QPen(QColor(Theme::Primary), 3));
 
     chart->addSeries(series);
     chart->setTitle(title);
     chart->setTitleFont(QFont("Inter", 12, QFont::Medium));
+    chart->setTitleBrush(QBrush(QColor(Theme::TextPrimary)));
 
     chart->legend()->hide();
     chart->setBackgroundVisible(false);
@@ -82,12 +90,14 @@ QChartView* MainWindow::createChart(const QString &title)
     axisX->setFormat("HH:mm");
     axisX->setTitleFont(QFont("Inter", 10));
     axisX->setLabelsFont(QFont("Inter", 9));
+    axisX->setLabelsColor(QColor(Theme::TextSecondary));
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
     auto axisY = new QValueAxis;
     axisY->setTitleFont(QFont("Inter", 10));
     axisY->setLabelsFont(QFont("Inter", 9));
+    axisY->setLabelsColor(QColor(Theme::TextSecondary));
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
@@ -117,7 +127,7 @@ void MainWindow::setupUI()
     // Title Section
     auto titleLabel = new QLabel("Smart Home Dashboard", this);
     titleLabel->setFont(QFont("Inter", 28, QFont::Bold));
-    titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::Primary));
+    titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::Accent));
     titleLabel->setAlignment(Qt::AlignLeft);
     titleLabel->setContentsMargins(0, 0, 0, 10);
     mainLayout->addWidget(titleLabel);
@@ -136,7 +146,7 @@ void MainWindow::setupUI()
 
     auto lightsTitle = new QLabel("Lighting Control", this);
     lightsTitle->setFont(QFont("Inter", 16, QFont::DemiBold));
-    lightsTitle->setStyleSheet(QString("color: %1;").arg(Theme::Primary));
+    lightsTitle->setStyleSheet(QString("color: %1;").arg(Theme::TextPrimary));
     lightsLayout->addWidget(lightsTitle);
 
     auto buttonContainer = new QHBoxLayout();
@@ -146,12 +156,15 @@ void MainWindow::setupUI()
     for (int i = 0; i < 5; ++i) {
         auto lightBtn = new QPushButton(lights.at(i), this);
         lightBtn->setCheckable(true);
+        lightBtn->setAutoExclusive(false);
         lightBtn->setStyleSheet(Theme::ButtonStyle);
         buttonContainer->addWidget(lightBtn);
         lightButtons.append(lightBtn);
 
-        connect(lightBtn, &QPushButton::toggled, this, [this, i](bool checked) {
+        connect(lightBtn, &QPushButton::toggled, this, [this, i, lightBtn](bool checked) {
             handleLightToggle(i, checked);
+            lightBtn->style()->unpolish(lightBtn);
+            lightBtn->style()->polish(lightBtn);
         });
     }
     lightsLayout->addLayout(buttonContainer);
@@ -171,11 +184,11 @@ void MainWindow::setupUI()
 
         auto titleLabel = new QLabel(title, this);
         titleLabel->setFont(QFont("Inter", 14, QFont::DemiBold));
-        titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::Secondary));
+        titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::TextSecondary));
 
         auto valueLabel = new QLabel(value, this);
         valueLabel->setFont(QFont("Inter", 24, QFont::Bold));
-        valueLabel->setStyleSheet(QString("color: %1;").arg(Theme::Primary));
+        valueLabel->setStyleSheet(QString("color: %1;").arg(Theme::TextPrimary));
 
         layout->addWidget(titleLabel, 0, Qt::AlignLeft);
         layout->addWidget(valueLabel, 0, Qt::AlignLeft);
@@ -192,7 +205,6 @@ void MainWindow::setupUI()
     // Graphs Section
     auto graphsLayout = new QGridLayout();
     graphsLayout->setSpacing(20);
-
 
     mainLayout->addLayout(graphsLayout);
 
