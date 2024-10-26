@@ -8,48 +8,96 @@
 #include <QDebug>
 #include <QtCharts>
 #include <QRandomGenerator>
+#include <QGraphicsDropShadowEffect>
 
+namespace Theme {
+    const QString Primary = "#7B2CBF";
+    const QString Secondary = "#9F7AEA";
+    const QString Accent = "#4C1D95";
+    const QString Background = "#F9F5FF";
+    const QString CardBg = "#FFFFFF";
+    const QString TextPrimary = "#4C1D95";
+    const QString TextSecondary = "#6B7280";
+    const QString Success = "#9F7AEA";
+
+    const QString CardStyle = QString(
+            "QFrame {"
+            "    background-color: %1;"
+            "    border-radius: 15px;"
+            "    padding: 5px;"
+            "}"
+    ).arg(CardBg);
+
+    const QString ButtonStyle = QString(
+            "QPushButton {"
+            "    background-color: %1;"
+            "    color: white;"
+            "    border-radius: 10px;"
+            "    padding: 15px 5px;"
+            "    font-weight: bold;"
+            "    font-size: 9px;"
+            "    min-width: 75px;"
+            "    border: none;"
+            "}"
+            "QPushButton:hover {"
+            "    background-color: %2;"
+            "}"
+            "QPushButton:checked {"
+            "    background-color: %3;"
+            "    border: none;"
+            "}"
+            "QPushButton:pressed {"
+            "    background-color: %3;"
+            "    border: none;"
+            "}"
+    ).arg(Secondary).arg(Primary).arg(Accent);
+}
 
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent)
 {
-    setWindowTitle("Home Portal");
-    setMinimumSize(800, 600);
+    setWindowTitle("Smart Home Dashboard");
+    setMinimumSize(1024, 768);
+    setStyleSheet(QString("QMainWindow { background-color: %1; }").arg(Theme::Background));
     setupUI();
 }
 
 void MainWindow::handleLightToggle(int lightIndex, bool isOn)
 {
-    /*
-     * ToDo:
-     *  - Create light objects with MQTT topics and base the toggle on their on or off state
-     *  - Enable toggling to switch the light state
-     *
-    */
-
     qDebug() << "Light" << lightIndex + 1 << (isOn ? "turned on" : "turned off");
 }
-
 QChartView* MainWindow::createChart(const QString &title)
 {
     auto chart = new QChart();
-    auto series = new QLineSeries();
+    auto series = new QSplineSeries();
 
-    // Add sample data using QRandomGenerator
     for (int i = 0; i < 10; ++i) {
         series->append(i, QRandomGenerator::global()->bounded(100));
     }
 
+    series->setPen(QPen(QColor(Theme::Primary), 3));
+
     chart->addSeries(series);
     chart->setTitle(title);
+    chart->setTitleFont(QFont("Inter", 12, QFont::Medium));
+    chart->setTitleBrush(QBrush(QColor(Theme::TextPrimary)));
+
     chart->legend()->hide();
+    chart->setBackgroundVisible(false);
+    chart->setMargins(QMargins(3, 3, 3, 3));
 
     auto axisX = new QDateTimeAxis;
     axisX->setFormat("HH:mm");
+    axisX->setTitleFont(QFont("Inter", 10));
+    axisX->setLabelsFont(QFont("Inter", 9));
+    axisX->setLabelsColor(QColor(Theme::TextSecondary));
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
     auto axisY = new QValueAxis;
+    axisY->setTitleFont(QFont("Inter", 10));
+    axisY->setLabelsFont(QFont("Inter", 9));
+    axisY->setLabelsColor(QColor(Theme::TextSecondary));
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
@@ -57,6 +105,15 @@ QChartView* MainWindow::createChart(const QString &title)
 
     auto chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setStyleSheet(Theme::CardStyle);
+
+    auto shadow = new QGraphicsDropShadowEffect;
+    shadow->setBlurRadius(15);
+    shadow->setXOffset(0);
+    shadow->setYOffset(2);
+    shadow->setColor(QColor(0, 0, 0, 30));
+    chartView->setGraphicsEffect(shadow);
+
     return chartView;
 }
 
@@ -67,87 +124,101 @@ void MainWindow::setupUI()
     mainLayout->setSpacing(20);
     mainLayout->setContentsMargins(20, 20, 20, 20);
 
-    // Title
+    // Title Section
     auto titleLabel = new QLabel("Smart Home Dashboard", this);
-    auto titleFont = QFont("Arial", 24, QFont::Bold);
-    titleLabel->setFont(titleFont);
-    titleLabel->setAlignment(Qt::AlignCenter);
+    titleLabel->setFont(QFont("Inter", 28, QFont::Bold));
+    titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::Accent));
+    titleLabel->setAlignment(Qt::AlignLeft);
+    titleLabel->setContentsMargins(0, 0, 0, 10);
     mainLayout->addWidget(titleLabel);
 
-    // Lights Control
+    // Controls Section
+    auto controlsLayout = new QHBoxLayout();
+    controlsLayout->setSpacing(20);
+
+    // Lights Control Section
     auto lightsFrame = new QFrame(this);
-    lightsFrame->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-    lightsFrame->setStyleSheet("QFrame { background-color: #f0f0f0; border-radius: 10px; }");
-    auto lightsLayout = new QHBoxLayout(lightsFrame);
+    lightsFrame->setStyleSheet(Theme::CardStyle);
+    lightsFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    auto lightsLayout = new QVBoxLayout(lightsFrame);
+    lightsLayout->setSpacing(10);
+    lightsLayout->setContentsMargins(15, 15, 15, 15);
 
-    QString buttonStyle =
-            "QPushButton {"
-            "   background-color: #e0e0e0;"
-            "   border-radius: 15px;"
-            "   padding: 10px;"
-            "   min-width: 100px;"
-            "}"
-            "QPushButton:checked {"
-            "   background-color: #4CAF50;"
-            "   color: white;"
-            "}";
+    auto lightsTitle = new QLabel("Lighting Control", this);
+    lightsTitle->setFont(QFont("Inter", 16, QFont::DemiBold));
+    lightsTitle->setStyleSheet(QString("color: %1;").arg(Theme::TextPrimary));
+    lightsLayout->addWidget(lightsTitle);
 
-    // Light buttons with slots
-    std::vector<QString> lights = {"Living Room Lamp", "Desk Lamp", "TV Lamp", "Bedroom Lamp", "Front Lamp"};
+    auto buttonContainer = new QHBoxLayout();
+    buttonContainer->setSpacing(10);
+
+    std::vector<QString> lights = {"Living Room", "Desk", "TV Area", "Bedroom", "Front Door"};
     for (int i = 0; i < 5; ++i) {
         auto lightBtn = new QPushButton(lights.at(i), this);
         lightBtn->setCheckable(true);
-        lightBtn->setStyleSheet(buttonStyle);
-        lightsLayout->addWidget(lightBtn);
+        lightBtn->setAutoExclusive(false);
+        lightBtn->setStyleSheet(Theme::ButtonStyle);
+        buttonContainer->addWidget(lightBtn);
         lightButtons.append(lightBtn);
 
-        connect(lightBtn, &QPushButton::toggled, this, [this, i](bool checked) {
+        connect(lightBtn, &QPushButton::toggled, this, [this, i, lightBtn](bool checked) {
             handleLightToggle(i, checked);
+            lightBtn->style()->unpolish(lightBtn);
+            lightBtn->style()->polish(lightBtn);
         });
     }
-    mainLayout->addWidget(lightsFrame);
+    lightsLayout->addLayout(buttonContainer);
+    controlsLayout->addWidget(lightsFrame);
 
     // Sensors Display Section
     auto sensorsFrame = new QFrame(this);
-    sensorsFrame->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
-    sensorsFrame->setStyleSheet("QFrame { background-color: #f0f0f0; border-radius: 10px; }");
+    sensorsFrame->setStyleSheet(Theme::CardStyle);
+    sensorsFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
     auto sensorsLayout = new QHBoxLayout(sensorsFrame);
+    sensorsLayout->setSpacing(30);
+    sensorsLayout->setContentsMargins(15, 15, 15, 15);
 
-    // Temperature Display
-    auto tempLayout = new QVBoxLayout();
-    auto tempLabel = new QLabel("Temperature", this);
-    tempLabel->setFont(QFont("Arial", 12, QFont::Bold));
-    auto tempValue = new QLabel("72°F", this);
-    tempValue->setFont(QFont("Arial", 24));
-    tempLayout->addWidget(tempLabel, 0, Qt::AlignCenter);
-    tempLayout->addWidget(tempValue, 0, Qt::AlignCenter);
-    sensorsLayout->addLayout(tempLayout);
+    auto createSensorDisplay = [this](const QString &title, const QString &value) {
+        auto layout = new QVBoxLayout();
+        layout->setSpacing(2);
 
-    // Moisture Displays
-    for (int i = 0; i < 2; ++i) {
-        auto moistureLayout = new QVBoxLayout();
-        auto moistureLabel = new QLabel(QString("Plant %1 Moisture").arg(i), this);
-        moistureLabel->setFont(QFont("Arial", 12, QFont::Bold));
-        auto moistureValue = new QLabel("55%", this);
-        moistureValue->setFont(QFont("Arial", 24));
-        moistureLayout->addWidget(moistureLabel, 0, Qt::AlignCenter);
-        moistureLayout->addWidget(moistureValue, 0, Qt::AlignCenter);
-        sensorsLayout->addLayout(moistureLayout);
-    }
-    mainLayout->addWidget(sensorsFrame);
+        auto titleLabel = new QLabel(title, this);
+        titleLabel->setFont(QFont("Inter", 14, QFont::DemiBold));
+        titleLabel->setStyleSheet(QString("color: %1;").arg(Theme::TextSecondary));
+
+        auto valueLabel = new QLabel(value, this);
+        valueLabel->setFont(QFont("Inter", 24, QFont::Bold));
+        valueLabel->setStyleSheet(QString("color: %1;").arg(Theme::TextPrimary));
+
+        layout->addWidget(titleLabel, 0, Qt::AlignLeft);
+        layout->addWidget(valueLabel, 0, Qt::AlignLeft);
+        return layout;
+    };
+
+    sensorsLayout->addLayout(createSensorDisplay("Temperature", "72°F"));
+    sensorsLayout->addLayout(createSensorDisplay("Plant 1 Moisture", "55%"));
+    sensorsLayout->addLayout(createSensorDisplay("Plant 2 Moisture", "62%"));
+    controlsLayout->addWidget(sensorsFrame);
+
+    mainLayout->addLayout(controlsLayout);
 
     // Graphs Section
     auto graphsLayout = new QGridLayout();
-    graphsLayout->setSpacing(10);
+    graphsLayout->setSpacing(20);
 
-    tempChart = createChart("Temperature History");
-    moistureChart1 = createChart("Plant 1 Moisture History");
-    moistureChart2 = createChart("Plant 2 Moisture History");
+    mainLayout->addLayout(graphsLayout);
+
+    tempChart = createChart("Temperature");
+    moistureChart1 = createChart("Plant 1 Moisture");
+    moistureChart2 = createChart("Plant 2 Moisture");
 
     graphsLayout->addWidget(tempChart, 0, 0);
     graphsLayout->addWidget(moistureChart1, 0, 1);
     graphsLayout->addWidget(moistureChart2, 1, 0);
 
-    mainLayout->addLayout(graphsLayout);
+    tempChart->setMinimumHeight(200);
+    moistureChart1->setMinimumHeight(200);
+    moistureChart2->setMinimumHeight(200);
+
     setCentralWidget(centralWidget);
 }
