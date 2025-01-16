@@ -1,6 +1,6 @@
 //
 // Created by Raphael Russo on 1/15/25.
-// Base class for one view of the dashboard
+// Base class for one view of the Dashboard
 //
 
 #ifndef DASHBOARD_BASEVIEW_H
@@ -8,7 +8,7 @@
 
 #include <QWidget>
 #include <memory>
-#include "../../Controller/MainController.h"
+#include "../Controller/MainController.h"
 
 class BaseView : public QWidget {
     Q_OBJECT

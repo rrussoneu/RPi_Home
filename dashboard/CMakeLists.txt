@@ -1,4 +1,4 @@
-# dashboard/CMakeLists.txt
+# Dashboard/CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.16)
 
@@ -55,9 +55,11 @@ set(PROJECT_HEADERS
         Model/MqttDevice.h
         View/MainWindow/MainWindow.cpp
         View/MainWindow/MainWindow.h
-        View/Views/BaseView.h
+        View/BaseView.h
         Controller/MainController.cpp
         Controller/MainController.h
+        View/Dashboard/DashboardView.cpp
+        View/Dashboard/DashboardView.h
 )
 
 # Add executable using qt_add_executable for better integration
@@ -83,7 +85,7 @@ target_link_libraries(dashboard PRIVATE
 )
 
 # Optionally, set RPATH properties if necessary
-# set_target_properties(dashboard PROPERTIES
+# set_target_properties(Dashboard PROPERTIES
 #     INSTALL_RPATH "/usr/local/lib"
 #     BUILD_WITH_INSTALL_RPATH TRUE
 #     INSTALL_RPATH_USE_LINK_PATH TRUE

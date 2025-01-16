@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
         return 1;
     }
     */
-    // Also run the Qt dashboard to check it
+    // Also run the Qt Dashboard to check it
     QApplication app(argc, argv);
 
     MainWindow_old mainWindow;
