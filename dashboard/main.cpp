@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <QApplication>
-#include "View/MainWindow/MainWindow.h"
+#include "MainWindow_old.h"
 
 // The paho repo has lots of examples to go back and look at more
 
@@ -53,7 +53,7 @@ public:
 };
 
 int main(int argc, char **argv) {
-
+    /*
     mqtt::async_client client(address, client_id);
 
     // Set up callback
@@ -122,11 +122,11 @@ int main(int argc, char **argv) {
         std::cerr << "MQTT Error: " << exc.what() << std::endl;
         return 1;
     }
-
+    */
     // Also run the Qt dashboard to check it
     QApplication app(argc, argv);
 
-    MainWindow mainWindow;
+    MainWindow_old mainWindow;
     mainWindow.show();
 
     return app.exec();

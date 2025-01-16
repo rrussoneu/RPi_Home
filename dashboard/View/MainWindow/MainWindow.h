@@ -1,29 +1,14 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+//
+// Created by Raphael Russo on 1/15/25.
+//
 
-#include <QMainWindow>
-#include <QVector>
-#include <QPushButton>
-#include <QtCharts>
+#ifndef DASHBOARD_MAINWINDOW_H
+#define DASHBOARD_MAINWINDOW_H
 
-class MainWindow : public QMainWindow {
-Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() = default;
+class MainWindow {
 
-private slots:
-    void handleLightToggle(int lightIndex, bool isOn);
-
-private:
-    void setupUI();
-    QChartView* createChart(const QString &title);
-
-    QVector<QPushButton*> lightButtons;
-    QChartView *tempChart;
-    QChartView *moistureChart1;
-    QChartView *moistureChart2;
 };
 
-#endif // MAINWINDOW_H
+
+#endif //DASHBOARD_MAINWINDOW_H

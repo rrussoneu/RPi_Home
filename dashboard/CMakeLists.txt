@@ -36,13 +36,14 @@ include_directories(
 # Define source files with correct paths
 set(PROJECT_SOURCES
         main.cpp
-        View/MainWindow/MainWindow.cpp
-        # Add other source files here if any
+        #View/MainWindow/MainWindow_old.cpp
+        Model/MqttDevice.cpp
+
 )
 
 # Define header files with correct paths
 set(PROJECT_HEADERS
-        View/MainWindow/MainWindow.h
+        #View/MainWindow/MainWindow_old.h
         Model/Devices/Device.h
         Model/Devices/CommandDevices/Light.h
         Model/Rooms/Room.h
@@ -51,9 +52,12 @@ set(PROJECT_HEADERS
         Model/Devices/Sensors/Sensor.h
         Model/Devices/Sensors/SensorData.h
         Model/Devices/Sensors/MoistureSensor.h
-        Model/MqttDevice.cpp
         Model/MqttDevice.h
-        # Add other header files here if any
+        View/MainWindow/MainWindow.cpp
+        View/MainWindow/MainWindow.h
+        View/Views/BaseView.h
+        Controller/MainController.cpp
+        Controller/MainController.h
 )
 
 # Add executable using qt_add_executable for better integration
