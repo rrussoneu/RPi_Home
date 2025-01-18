@@ -11,6 +11,9 @@
 #include <QGridLayout>
 #include <QLabel>
 
+/**
+ * Class for a view of the main dashboard
+ */
 class DashboardView : public BaseView {
 Q_OBJECT
 
