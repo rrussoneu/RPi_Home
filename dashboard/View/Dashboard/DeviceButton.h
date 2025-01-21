@@ -27,28 +27,46 @@ public:
             : QWidget(parent), m_deviceId(device.id) {
         auto* layout = new QVBoxLayout(this);
         layout->setSpacing(4);
+        layout->setContentsMargins(4, 4, 4, 4);
 
         // Icon button
         m_iconButton = new QPushButton(this);
         m_iconButton->setIcon(QIcon(device.iconPath));
-        m_iconButton->setIconSize(QSize(48, 48));
+        m_iconButton->setIconSize(QSize(32, 32));
         m_iconButton->setCheckable(true);
         m_iconButton->setChecked(device.isOn);
-        layout->addWidget(m_iconButton);
+        m_iconButton->setFixedSize(48, 48);
+
+        auto* buttonContainer = new QWidget(this);
+        auto* buttonLayout = new QHBoxLayout(buttonContainer);
+        buttonLayout->setContentsMargins(0, 0, 0, 0);
+        buttonLayout->addStretch();
+        buttonLayout->addWidget(m_iconButton);
+        buttonLayout->addStretch();
+
+        layout->addWidget(buttonContainer);
 
         // Device name
-        auto* nameLabel = new QLabel(device.name, this);
-        nameLabel->setAlignment(Qt::AlignCenter);
-        layout->addWidget(nameLabel);
+        m_nameLabel = new QLabel(device.name, this);
+        m_nameLabel->setAlignment(Qt::AlignCenter);
+        m_nameLabel->setWordWrap(true);
+        m_nameLabel->setMinimumWidth(80);
+        layout->addWidget(m_nameLabel);
 
         // Room name
-        auto* roomLabel = new QLabel(device.room, this);
-        roomLabel->setAlignment(Qt::AlignCenter);
-        roomLabel->setProperty("class", "room-label");
-        layout->addWidget(roomLabel);
+        m_roomLabel = new QLabel(device.room, this);
+        m_roomLabel->setAlignment(Qt::AlignCenter);
+        m_roomLabel->setProperty("class", "room-label");
+        m_roomLabel->setWordWrap(true);
+        layout->addWidget(m_roomLabel);
+
+        // Set fixed width for the entire widget
+        setFixedWidth(120);
+        setMinimumHeight(140);
 
         connect(m_iconButton, &QPushButton::clicked,
                 this, &DeviceButton::handleToggle);
+
     }
 
 signals:
@@ -62,6 +80,8 @@ private slots:
 private:
     QString m_deviceId;
     QPushButton* m_iconButton;
+    QLabel* m_nameLabel;
+    QLabel* m_roomLabel;
 };
 
 

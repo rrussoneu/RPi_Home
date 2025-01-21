@@ -9,6 +9,7 @@ DashboardView::DashboardView(QWidget* parent)
         : QWidget(parent)
 {
     setupUi();
+    updateDevices();
 }
 
 void DashboardView::setupUi()
@@ -77,7 +78,7 @@ void DashboardView::updateDevices()
 
     // Example devices (replace with actual device data)
     std::vector<DeviceInfo> devices = {
-            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/lamp.svg", true},
+            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light_on.svg", true},
             {"fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan.svg", false},
     };
 
@@ -113,7 +114,7 @@ void DashboardView::filterByRoom(const QString& room)
 
     // Example devices (replace with actual device data)
     std::vector<DeviceInfo> devices = {
-            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/lamp.svg", true},
+            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light_on.svg", true},
             {"fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan.svg", false},
     };
 
