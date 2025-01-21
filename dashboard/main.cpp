@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <QApplication>
-#include "MainWindow_old.h"
+#include "View/MainWindow/MainWindow.h"
 
 // The paho repo has lots of examples to go back and look at more
 
@@ -126,7 +126,7 @@ int main(int argc, char **argv) {
     // Also run the Qt Dashboard to check it
     QApplication app(argc, argv);
 
-    MainWindow_old mainWindow;
+    MainWindow mainWindow;
     mainWindow.show();
 
     return app.exec();
