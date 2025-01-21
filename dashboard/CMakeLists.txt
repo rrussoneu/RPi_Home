@@ -38,6 +38,7 @@ set(PROJECT_SOURCES
         main.cpp
         #View/MainWindow/MainWindow_old.cpp
         Model/MqttDevice.cpp
+        resources.qrc
 
 )
 
@@ -60,6 +61,10 @@ set(PROJECT_HEADERS
         Controller/MainController.h
         View/Dashboard/DashboardView.cpp
         View/Dashboard/DashboardView.h
+        View/Dashboard/DeviceSection.cpp
+        View/Dashboard/DeviceSection.h
+        View/Dashboard/DeviceButton.cpp
+        View/Dashboard/DeviceButton.h
 )
 
 # Add executable using qt_add_executable for better integration
