@@ -5,45 +5,31 @@
 #ifndef DASHBOARD_DASHBOARDVIEW_H
 #define DASHBOARD_DASHBOARDVIEW_H
 
-#pragma once
-#include "../BaseView.h"
-#include <QVBoxLayout>
-#include <QGridLayout>
-#include <QLabel>
-
 /**
  * Class for a view of the main dashboard
  */
-class DashboardView : public BaseView {
+#pragma once
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QComboBox>
+#include "DeviceSection.h"
+
+class DashboardView : public QWidget {
 Q_OBJECT
-
 public:
-    explicit DashboardView(MainController* controller, QWidget* parent = nullptr)
-            : BaseView(controller, parent)
-    {
-        setupUi();
-    }
-
+    explicit DashboardView(QWidget* parent = nullptr);
+    void updateDevices();
+    void filterByRoom(const QString& room);
 
 private:
-    void setupUi()
-    {
-        auto* mainLayout = new QVBoxLayout(this);
+    void setupUi();
+    void createRoomFilter();
+    void createDeviceSections();
 
-        // Header
-        auto* headerLabel = new QLabel("Dashboard", this);
-        headerLabel->setProperty("class", "view-header");
-        mainLayout->addWidget(headerLabel);
-
-        // Grid for device and sensor widgets
-        auto* grid = new QGridLayout();
-        mainLayout->addLayout(grid);
-
-        // Add some spacing and stretch
-        mainLayout->addStretch();
-    }
-
-
+    QVBoxLayout* m_mainLayout;
+    QComboBox* m_roomFilter;
+    std::map<QString, DeviceSection*> m_deviceSections; // Category -> Section
 };
 
 
