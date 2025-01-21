@@ -76,9 +76,13 @@ DeviceButton QLabel {
     padding: 4px;
 }
 
+QLabel[class="device-label"] {
+    font-size: 14px;
+}
+
 QLabel[class="room-label"] {
     color: #9aa5ce;
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* Scroll Areas */

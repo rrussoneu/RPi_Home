@@ -26,7 +26,7 @@ public:
     explicit DeviceButton(const DeviceInfo& device, QWidget* parent = nullptr)
             : QWidget(parent), m_deviceId(device.id) {
         auto* layout = new QVBoxLayout(this);
-        layout->setSpacing(4);
+        layout->setSpacing(2);
         layout->setContentsMargins(4, 4, 4, 4);
 
         // Icon button
@@ -40,6 +40,7 @@ public:
         auto* buttonContainer = new QWidget(this);
         auto* buttonLayout = new QHBoxLayout(buttonContainer);
         buttonLayout->setContentsMargins(0, 0, 0, 0);
+        buttonLayout->setSpacing(0);
         buttonLayout->addStretch();
         buttonLayout->addWidget(m_iconButton);
         buttonLayout->addStretch();
@@ -49,8 +50,10 @@ public:
         // Device name
         m_nameLabel = new QLabel(device.name, this);
         m_nameLabel->setAlignment(Qt::AlignCenter);
+        m_nameLabel->setProperty("class", "device-label");
         m_nameLabel->setWordWrap(true);
         m_nameLabel->setMinimumWidth(80);
+        m_nameLabel->setFixedHeight(24);
         layout->addWidget(m_nameLabel);
 
         // Room name
@@ -58,11 +61,12 @@ public:
         m_roomLabel->setAlignment(Qt::AlignCenter);
         m_roomLabel->setProperty("class", "room-label");
         m_roomLabel->setWordWrap(true);
+        m_roomLabel->setFixedHeight(20);
         layout->addWidget(m_roomLabel);
 
         // Set fixed width for the entire widget
         setFixedWidth(120);
-        setMinimumHeight(140);
+        setMinimumHeight(110);
 
         connect(m_iconButton, &QPushButton::clicked,
                 this, &DeviceButton::handleToggle);

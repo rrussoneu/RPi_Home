@@ -24,19 +24,20 @@ public:
         layout->addWidget(header);
 
         // Scrollable device container
-        auto* scrollArea = new QScrollArea(this);
-        scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-        scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        scrollArea->setWidgetResizable(true);
+        m_scrollArea = new QScrollArea(this);
+        m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        m_scrollArea->setWidgetResizable(true);
+        m_scrollArea->setFixedHeight(120);
 
-        auto* scrollContent = new QWidget(scrollArea);
+        auto* scrollContent = new QWidget(m_scrollArea);
         m_deviceLayout = new QHBoxLayout(scrollContent);
         m_deviceLayout->setSpacing(8);
         m_deviceLayout->setContentsMargins(4, 4, 4, 4);
         m_deviceLayout->addStretch();
 
-        scrollArea->setWidget(scrollContent);
-        layout->addWidget(scrollArea);
+        m_scrollArea->setWidget(scrollContent);
+        layout->addWidget(m_scrollArea);
     }
 
     void addDevice(const DeviceInfo& device) {
@@ -54,6 +55,7 @@ public:
 
 private:
     QHBoxLayout* m_deviceLayout;
+    QScrollArea* m_scrollArea;
 };
 
 

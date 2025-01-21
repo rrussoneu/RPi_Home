@@ -9,5 +9,6 @@
         <file>res/styles/default.qss</file>
         <file>res/icons/light_on.svg</file>
         <file>res/icons/fan.svg</file>
+        <file>res/icons/down_arrow.svg</file>
     </qresource>
 </RCC>
