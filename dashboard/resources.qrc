@@ -1,0 +1,11 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>res/icons/dashboard.svg</file>
+        <file>res/icons/devices.svg</file>
+        <file>res/icons/garden.svg</file>
+        <file>res/icons/camera.svg</file>
+        <file>res/icons/settings.svg</file>
+        <file>res/styles/default.qss</file>
+    </qresource>
+</RCC>
