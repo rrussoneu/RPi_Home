@@ -53,7 +53,7 @@ public:
 };
 
 int main(int argc, char **argv) {
-
+    /*
     mqtt::async_client client(address, client_id);
 
     // Set up callback
@@ -122,8 +122,8 @@ int main(int argc, char **argv) {
         std::cerr << "MQTT Error: " << exc.what() << std::endl;
         return 1;
     }
-
-    // Also run the Qt dashboard to check it
+    */
+    // Also run the Qt Dashboard to check it
     QApplication app(argc, argv);
 
     MainWindow mainWindow;

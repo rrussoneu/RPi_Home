@@ -1,0 +1,264 @@
+/* Main Window */
+QMainWindow {
+    background-color: #1a1b26;
+    color: #c0caf5;
+}
+
+/* Navigation Bar */
+QWidget[class="navigation-bar"] {
+    background-color: #24283b;
+    border: none;
+    padding: 8px 4px;
+}
+
+QWidget[class="navigation-bar"] QToolButton {
+    background-color: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 4px;
+    color: #9aa5ce;
+    qproperty-toolButtonStyle: ToolButtonTextUnderIcon;
+    qproperty-iconSize: 24px;
+}
+
+QWidget[class="navigation-bar"] QToolButton:hover {
+    background-color: #2f334d;
+    color: #c0caf5;
+}
+
+QWidget[class="navigation-bar"] QToolButton:checked {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+}
+
+/* Headers */
+QLabel[class="section-header"] {
+    font-size: 20px;
+    font-weight: 600;
+    color: #c0caf5;
+    padding: 16px 0;
+}
+
+/* Device Buttons */
+DeviceButton {
+    background-color: #24283b;
+    border-radius: 12px;
+    padding: 12px;
+    min-width: 120px;
+    max-width: 140px;
+    border: 1px solid #2f334d;
+}
+
+DeviceButton:hover {
+    background-color: #2f334d;
+    border: 1px solid #7aa2f7;
+}
+
+DeviceButton QPushButton {
+    border: none;
+    background-color: transparent;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+DeviceButton QPushButton:checked {
+    background-color: #7aa2f7;
+}
+
+DeviceButton QPushButton:checked:hover {
+    background-color: #89b4ff;
+}
+
+DeviceButton QLabel {
+    color: #c0caf5;
+    font-size: 14px;
+    padding: 4px;
+}
+
+QLabel[class="device-label"] {
+    font-size: 14px;
+}
+
+QLabel[class="room-label"] {
+    color: #9aa5ce;
+    font-size: 10px;
+}
+
+/* Scroll Areas */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background-color: transparent;
+}
+
+/* Scrollbars */
+QScrollBar:horizontal {
+    height: 8px;
+    background-color: #24283b;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #7aa2f7;
+    border-radius: 4px;
+    min-width: 24px;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    width: 0px;
+}
+
+QScrollBar:vertical {
+    width: 8px;
+    background-color: #24283b;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #7aa2f7;
+    border-radius: 4px;
+    min-height: 24px;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+/* Combo Box */
+QComboBox {
+    background-color: #24283b;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    padding: 6px 12px;
+    color: #c0caf5;
+    min-width: 150px;
+    selection-background-color: #7aa2f7;
+    selection-color: #1a1b26;
+}
+
+QComboBox:hover {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QComboBox:focus {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 24px;
+    padding-right: 8px;
+}
+
+QComboBox::down-arrow {
+    image: url(:/res/icons/down_arrow.svg);
+    width: 12px;
+    height: 12px;
+}
+
+/* The popup of the combobox */
+QComboBox QAbstractItemView {
+    background-color: #24283b;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    selection-background-color: #7aa2f7;
+    selection-color: #1a1b26;
+    color: #c0caf5;
+    outline: 0px;
+}
+
+/* Specifically target the ListView inside ComboBox */
+QComboBox QListView {
+    background-color: #24283b;
+    border: none;
+    outline: none;
+}
+
+/* Style the items in the ListView */
+QComboBox QListView::item {
+    background-color: transparent;
+    padding: 8px 12px;
+    border: none;
+    min-height: 24px;
+    margin: 2px 0px;  /* Small vertical spacing between items */
+}
+
+QComboBox QListView::item:hover {
+    background-color: #2f334d;
+}
+
+QComboBox QListView::item:selected {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+}
+
+/* Style for the combobox when opened */
+QComboBox:on {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QComboBox QWidget {
+    background-color: #24283b;
+}
+
+/* Try to force the popup frame styling */
+QComboBox QFrame {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    background-color: #24283b;
+    border: none;
+}
+
+/* Viewport styling */
+QComboBox QAbstractItemView::viewport {
+    background-color: #24283b;
+}
+
+/* Try to remove any remaining space */
+QComboBox QScrollBar:vertical {
+    margin: 0px;
+}
+
+/* Labels */
+QLabel {
+    color: #c0caf5;
+}
+
+QLabel[class="label-header"] {
+    font-size: 24px;
+    font-weight: bold;
+    color: #c0caf5;
+}
+
+/* Status Messages */
+QLabel[class="status-success"] {
+    color: #9ece6a;
+}
+
+QLabel[class="status-warning"] {
+    color: #e0af68;
+}
+
+QLabel[class="status-error"] {
+    color: #f7768e;
+}
+
+QLabel[class="status-info"] {
+    color: #2ac3de;
+}
+
+/* Device Sections */
+DeviceSection {
+    background-color: #24283b;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 8px 0;
+}

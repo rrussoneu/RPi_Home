@@ -1,4 +1,4 @@
-# dashboard/CMakeLists.txt
+# Dashboard/CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.16)
 
@@ -36,24 +36,34 @@ include_directories(
 # Define source files with correct paths
 set(PROJECT_SOURCES
         main.cpp
+        #View/MainWindow/MainWindow_old.cpp
+        Model/MqttDevice.cpp
         View/MainWindow/MainWindow.cpp
-        # Add other source files here if any
+        View/Dashboard/DashboardView.cpp
+        Controller/MainController.cpp
+        View/Dashboard/DeviceSection.cpp
+        View/Dashboard/DeviceButton.cpp
+        Model/Devices/DeviceManager.cpp
+        resources.qrc
+
 )
 
 # Define header files with correct paths
 set(PROJECT_HEADERS
-        View/MainWindow/MainWindow.h
+        #View/MainWindow/MainWindow_old.h
         Model/Devices/Device.h
-        Model/Devices/CommandDevices/Light.h
         Model/Rooms/Room.h
-        Model/Devices/CommandDevices/CommandDevice.h
-        Model/Devices/CommandDevices/Fan.h
-        Model/Devices/Sensors/Sensor.h
-        Model/Devices/Sensors/SensorData.h
-        Model/Devices/Sensors/MoistureSensor.h
-        Model/MqttDevice.cpp
-        Model/MqttDevice.h
-        # Add other header files here if any
+        View/MainWindow/MainWindow.h
+        View/BaseView.h
+        Controller/MainController.h
+        View/Dashboard/DashboardView.h
+        View/Dashboard/DeviceSection.h
+        View/Dashboard/DeviceButton.h
+        View/Dashboard/CustomComboDelegate.h
+        Model/Devices/DeviceManager.h
+        Model/Devices/DeviceInfo.h
+        Model/Devices/DeviceFactory.h
+        Model/Devices/DeviceTypes/LightDevice.h
 )
 
 # Add executable using qt_add_executable for better integration
@@ -79,7 +89,7 @@ target_link_libraries(dashboard PRIVATE
 )
 
 # Optionally, set RPATH properties if necessary
-# set_target_properties(dashboard PROPERTIES
+# set_target_properties(Dashboard PROPERTIES
 #     INSTALL_RPATH "/usr/local/lib"
 #     BUILD_WITH_INSTALL_RPATH TRUE
 #     INSTALL_RPATH_USE_LINK_PATH TRUE
