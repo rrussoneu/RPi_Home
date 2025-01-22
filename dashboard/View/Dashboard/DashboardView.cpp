@@ -3,6 +3,7 @@
 //
 
 #include "DashboardView.h"
+#include "CustomComboDelegate.h"
 #include <QSet>
 
 DashboardView::DashboardView(QWidget* parent)
@@ -37,6 +38,8 @@ void DashboardView::createRoomFilter() {
 
     m_roomFilter = new QComboBox(this);
     m_roomFilter->addItem(tr("All Rooms"));
+    m_roomFilter->setItemDelegate(new CustomComboDelegate(m_roomFilter));
+    m_roomFilter->setStyle(new ComboBoxStyle(m_roomFilter->style()));
 
     filterLayout->addWidget(label);
     filterLayout->addWidget(m_roomFilter);

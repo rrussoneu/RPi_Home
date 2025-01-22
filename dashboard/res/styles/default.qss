@@ -129,7 +129,6 @@ QScrollBar::add-line:vertical,
 QScrollBar::sub-line:vertical {
     height: 0px;
 }
-
 /* Combo Box */
 QComboBox {
     background-color: #24283b;
@@ -138,10 +137,13 @@ QComboBox {
     padding: 6px 12px;
     color: #c0caf5;
     min-width: 150px;
+    selection-background-color: #7aa2f7;
+    selection-color: #1a1b26;
 }
 
 QComboBox:hover {
     border-color: #7aa2f7;
+    background-color: #2f334d;
 }
 
 QComboBox:focus {
@@ -152,6 +154,7 @@ QComboBox:focus {
 QComboBox::drop-down {
     border: none;
     width: 24px;
+    padding-right: 8px;
 }
 
 QComboBox::down-arrow {
@@ -160,6 +163,7 @@ QComboBox::down-arrow {
     height: 12px;
 }
 
+/* The popup of the combobox */
 QComboBox QAbstractItemView {
     background-color: #24283b;
     border: 1px solid #2f334d;
@@ -167,6 +171,60 @@ QComboBox QAbstractItemView {
     selection-background-color: #7aa2f7;
     selection-color: #1a1b26;
     color: #c0caf5;
+    outline: 0px;
+}
+
+/* Specifically target the ListView inside ComboBox */
+QComboBox QListView {
+    background-color: #24283b;
+    border: none;
+    outline: none;
+}
+
+/* Style the items in the ListView */
+QComboBox QListView::item {
+    background-color: transparent;
+    padding: 8px 12px;
+    border: none;
+    min-height: 24px;
+    margin: 2px 0px;  /* Small vertical spacing between items */
+}
+
+QComboBox QListView::item:hover {
+    background-color: #2f334d;
+}
+
+QComboBox QListView::item:selected {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+}
+
+/* Style for the combobox when opened */
+QComboBox:on {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QComboBox QWidget {
+    background-color: #24283b;
+}
+
+/* Try to force the popup frame styling */
+QComboBox QFrame {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    background-color: #24283b;
+    border: none;
+}
+
+/* Viewport styling */
+QComboBox QAbstractItemView::viewport {
+    background-color: #24283b;
+}
+
+/* Try to remove any remaining space */
+QComboBox QScrollBar:vertical {
+    margin: 0px;
 }
 
 /* Labels */
