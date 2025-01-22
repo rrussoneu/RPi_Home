@@ -5,6 +5,7 @@
 #include "DashboardView.h"
 #include "CustomComboDelegate.h"
 #include <QSet>
+#include "Devices/DeviceManager.h"
 
 DashboardView::DashboardView(QWidget* parent)
         : QWidget(parent)
@@ -76,13 +77,13 @@ void DashboardView::updateDevices()
         section->clear();
     }
 
-    // Update room filter options
+    auto& deviceManager = DeviceManager::instance();
     QSet<QString> rooms;
 
-    // Example devices (replace with actual device data)
+    // Example devices (replace with actual device data from DeviceManager later)
     std::vector<DeviceInfo> devices = {
-            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light_on.svg", true},
-            {"fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan.svg", false},
+            DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
     };
 
     // Add devices to appropriate sections
@@ -91,12 +92,6 @@ void DashboardView::updateDevices()
         auto it = m_deviceSections.find(device.category);
         if (it != m_deviceSections.end()) {
             it->second->addDevice(device);
-            QList<QLabel*> roomLabels = it->second->findChildren<QLabel*>();
-            for (auto* label : roomLabels) {
-                if (label->text() == device.room) {
-                    label->setProperty("class", "room-label");
-                }
-            }
         }
     }
 
@@ -115,10 +110,10 @@ void DashboardView::filterByRoom(const QString& room)
         section->clear();
     }
 
-    // Example devices (replace with actual device data)
+    // Example devices (replace with actual device data from DeviceManager later)
     std::vector<DeviceInfo> devices = {
-            {"light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light_on.svg", true},
-            {"fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan.svg", false},
+            DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
     };
 
     // Filter and add devices
