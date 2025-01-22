@@ -8,7 +8,9 @@
         <file>res/icons/settings.svg</file>
         <file>res/styles/default.qss</file>
         <file>res/icons/light_on.svg</file>
-        <file>res/icons/fan.svg</file>
+        <file>res/icons/light_off.svg</file>
+        <file>res/icons/fan_on.svg</file>
+        <file>res/icons/fan_off.svg</file>
         <file>res/icons/down_arrow.svg</file>
     </qresource>
 </RCC>
