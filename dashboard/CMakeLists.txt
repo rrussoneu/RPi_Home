@@ -38,6 +38,12 @@ set(PROJECT_SOURCES
         main.cpp
         #View/MainWindow/MainWindow_old.cpp
         Model/MqttDevice.cpp
+        View/MainWindow/MainWindow.cpp
+        View/Dashboard/DashboardView.cpp
+        Controller/MainController.cpp
+        View/Dashboard/DeviceSection.cpp
+        View/Dashboard/DeviceButton.cpp
+        Model/Devices/DeviceManager.cpp
         resources.qrc
 
 )
@@ -46,25 +52,18 @@ set(PROJECT_SOURCES
 set(PROJECT_HEADERS
         #View/MainWindow/MainWindow_old.h
         Model/Devices/Device.h
-        Model/Devices/CommandDevices/Light.h
         Model/Rooms/Room.h
-        Model/Devices/CommandDevices/CommandDevice.h
-        Model/Devices/CommandDevices/Fan.h
-        Model/Devices/Sensors/Sensor.h
-        Model/Devices/Sensors/SensorData.h
-        Model/Devices/Sensors/MoistureSensor.h
-        Model/MqttDevice.h
-        View/MainWindow/MainWindow.cpp
         View/MainWindow/MainWindow.h
         View/BaseView.h
-        Controller/MainController.cpp
         Controller/MainController.h
-        View/Dashboard/DashboardView.cpp
         View/Dashboard/DashboardView.h
-        View/Dashboard/DeviceSection.cpp
         View/Dashboard/DeviceSection.h
-        View/Dashboard/DeviceButton.cpp
         View/Dashboard/DeviceButton.h
+        View/Dashboard/CustomComboDelegate.h
+        Model/Devices/DeviceManager.h
+        Model/Devices/DeviceInfo.h
+        Model/Devices/DeviceFactory.h
+        Model/Devices/DeviceTypes/LightDevice.h
 )
 
 # Add executable using qt_add_executable for better integration
