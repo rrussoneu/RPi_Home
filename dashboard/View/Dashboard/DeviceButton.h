@@ -4,34 +4,27 @@
 
 #ifndef DASHBOARD_DEVICEBUTTON_H
 #define DASHBOARD_DEVICEBUTTON_H
-
 #pragma once
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-
-struct DeviceInfo {
-    QString id;
-    QString name;
-    QString room;
-    QString category;
-    QString iconPath;
-    bool isOn;
-};
+#include "Devices/DeviceInfo.h"
 
 class DeviceButton : public QWidget {
 Q_OBJECT
 public:
     explicit DeviceButton(const DeviceInfo& device, QWidget* parent = nullptr)
-            : QWidget(parent), m_deviceId(device.id) {
+            : QWidget(parent)
+            , m_deviceId(device.id)
+            , m_device(device) {
         auto* layout = new QVBoxLayout(this);
         layout->setSpacing(2);
         layout->setContentsMargins(4, 4, 4, 4);
 
         // Icon button
         m_iconButton = new QPushButton(this);
-        m_iconButton->setIcon(QIcon(device.iconPath));
+        updateIcon();  // Set initial icon based on state
         m_iconButton->setIconSize(QSize(32, 32));
         m_iconButton->setCheckable(true);
         m_iconButton->setChecked(device.isOn);
@@ -70,7 +63,13 @@ public:
 
         connect(m_iconButton, &QPushButton::clicked,
                 this, &DeviceButton::handleToggle);
+    }
 
+    // Update the device state and icon
+    void updateState(bool isOn) {
+        m_device.isOn = isOn;
+        m_iconButton->setChecked(isOn);
+        updateIcon();
     }
 
 signals:
@@ -78,15 +77,21 @@ signals:
 
 private slots:
     void handleToggle(bool checked) {
+        m_device.isOn = checked;
+        updateIcon();
         emit toggled(m_deviceId, checked);
     }
 
 private:
+    void updateIcon() {
+        m_iconButton->setIcon(QIcon(m_device.getStateIcon()));
+    }
+
     QString m_deviceId;
+    DeviceInfo m_device;
     QPushButton* m_iconButton;
     QLabel* m_nameLabel;
     QLabel* m_roomLabel;
 };
-
 
 #endif //DASHBOARD_DEVICEBUTTON_H
