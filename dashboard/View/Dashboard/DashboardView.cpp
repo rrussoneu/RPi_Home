@@ -83,7 +83,10 @@ void DashboardView::updateDevices()
     // Example devices (replace with actual device data from DeviceManager later)
     std::vector<DeviceInfo> devices = {
             DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
+            DeviceInfo("light2", "Desk Lamp", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("light3", "Overhead Light", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("fan1", "Desk Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
+            DeviceInfo("fan2", "Box Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
     };
 
     // Add devices to appropriate sections
@@ -113,7 +116,10 @@ void DashboardView::filterByRoom(const QString& room)
     // Example devices (replace with actual device data from DeviceManager later)
     std::vector<DeviceInfo> devices = {
             DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("fan1", "Ceiling Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
+            DeviceInfo("light2", "Desk Lamp", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("light3", "Overhead Light", "Living Room", "Lights", ":/res/icons/light", true),
+            DeviceInfo("fan1", "Desk Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
+            DeviceInfo("fan2", "Box Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
     };
 
     // Filter and add devices
