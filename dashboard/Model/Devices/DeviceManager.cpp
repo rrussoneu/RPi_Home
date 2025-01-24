@@ -93,3 +93,9 @@ bool DeviceManager::updateDeviceState(const QString& deviceId, const DeviceState
     }
     return false;
 }
+
+QList<DeviceInfo> DeviceManager::getDevices() const {
+    return m_deviceInfos.values();
+}
+
+

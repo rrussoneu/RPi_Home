@@ -24,6 +24,7 @@ public:
     }
 
     // Device management
+    QList<DeviceInfo> getDevices() const;
     bool addDevice(const DeviceInfo& info);
     bool removeDevice(const QString& deviceId);
     std::shared_ptr<Device> getDevice(const QString& deviceId);
@@ -32,6 +33,7 @@ public:
     QList<DeviceInfo> getDevicesByCategory(const QString& category) const;
     QStringList getRooms() const;
     QStringList getCategories() const;
+
 
     // State management
     bool updateDeviceState(const QString& deviceId, const DeviceState& state);

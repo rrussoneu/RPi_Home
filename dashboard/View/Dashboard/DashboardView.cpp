@@ -95,14 +95,7 @@ void DashboardView::updateDevices()
     auto& deviceManager = DeviceManager::instance();
     QSet<QString> rooms;
 
-    // Example devices (replace with actual device data from DeviceManager later)
-    std::vector<DeviceInfo> devices = {
-            DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("light2", "Desk Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("light3", "Overhead Light", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("fan1", "Desk Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
-            DeviceInfo("fan2", "Box Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
-    };
+    QList<DeviceInfo> devices = deviceManager.getDevices();
 
     // Add devices to appropriate sections
     for (const auto& device : devices) {
@@ -128,14 +121,10 @@ void DashboardView::filterByRoom(const QString& room)
         section->clear();
     }
 
-    // Example devices (replace with actual device data from DeviceManager later)
-    std::vector<DeviceInfo> devices = {
-            DeviceInfo("light1", "Door Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("light2", "Desk Lamp", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("light3", "Overhead Light", "Living Room", "Lights", ":/res/icons/light", true),
-            DeviceInfo("fan1", "Desk Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
-            DeviceInfo("fan2", "Box Fan", "Bedroom", "Fans", ":/res/icons/fan", false),
-    };
+    auto& deviceManager = DeviceManager::instance();
+
+    QList<DeviceInfo> devices = deviceManager.getDevices();
+
 
     // Filter and add devices
     for (const auto& device : devices) {
