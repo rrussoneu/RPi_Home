@@ -45,6 +45,8 @@ set(PROJECT_SOURCES
         View/Dashboard/DeviceButton.cpp
         Model/Devices/DeviceManager.cpp
         resources.qrc
+        Controller/DeviceController.cpp
+        View/Dialogs/AddDeviceDialog.cpp
 
 )
 
@@ -64,6 +66,8 @@ set(PROJECT_HEADERS
         Model/Devices/DeviceInfo.h
         Model/Devices/DeviceFactory.h
         Model/Devices/DeviceTypes/LightDevice.h
+        Controller/DeviceController.h
+        View/Dialogs/AddDeviceDialog.h
 )
 
 # Add executable using qt_add_executable for better integration

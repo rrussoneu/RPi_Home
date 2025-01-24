@@ -22,6 +22,9 @@ public:
     void updateDevices();
     void filterByRoom(const QString& room);
 
+private slots:
+    void showAddDeviceDialog();
+
 private:
     void setupUi();
     void createRoomFilter();
@@ -30,6 +33,7 @@ private:
     QVBoxLayout* m_mainLayout;
     QComboBox* m_roomFilter;
     std::map<QString, DeviceSection*> m_deviceSections; // Category -> Section
+    QPushButton* m_addDeviceButton;
 };
 
 

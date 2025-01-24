@@ -6,6 +6,7 @@
 #include "CustomComboDelegate.h"
 #include <QSet>
 #include "Devices/DeviceManager.h"
+#include "../Dialogs/AddDeviceDialog.h"
 
 DashboardView::DashboardView(QWidget* parent)
         : QWidget(parent)
@@ -28,6 +29,20 @@ void DashboardView::setupUi()
 
     // Add stretch at the bottom
     m_mainLayout->addStretch();
+
+    // Add device button
+    m_addDeviceButton = new QPushButton(tr("Add Device"), this);
+    m_addDeviceButton->setProperty("class", "primary-button");
+    connect(m_addDeviceButton, &QPushButton::clicked,
+            this, &DashboardView::showAddDeviceDialog);
+
+    auto* headerContainer = qobject_cast<QWidget*>(m_roomFilter->parent());
+    if (headerContainer) {
+        auto* layout = qobject_cast<QHBoxLayout*>(headerContainer->layout());
+        if (layout) {
+            layout->insertWidget(layout->count() - 1, m_addDeviceButton);
+        }
+    }
 }
 
 void DashboardView::createRoomFilter() {
@@ -130,5 +145,14 @@ void DashboardView::filterByRoom(const QString& room)
                 it->second->addDevice(device);
             }
         }
+    }
+}
+
+void DashboardView::showAddDeviceDialog() {
+    AddDeviceDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        DeviceInfo newDevice = dialog.getDeviceInfo();
+        DeviceManager::instance().addDevice(newDevice);
+        updateDevices();
     }
 }
