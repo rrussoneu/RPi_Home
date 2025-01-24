@@ -15,7 +15,12 @@ AddDeviceDialog::AddDeviceDialog(QWidget* parent) : QDialog(parent) {
 
 void AddDeviceDialog::setupUi() {
     auto* layout = new QVBoxLayout(this);
+    layout->setSpacing(16);
+    layout->setContentsMargins(24, 24, 24, 24);
+
     auto* formLayout = new QFormLayout;
+    formLayout->setSpacing(12);
+    formLayout->setLabelAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     m_nameEdit = new QLineEdit(this);
     formLayout->addRow(tr("Device Name:"), m_nameEdit);
@@ -34,11 +39,13 @@ void AddDeviceDialog::setupUi() {
     formLayout->addRow(tr("MQTT Topic:"), m_topicEdit);
 
     layout->addLayout(formLayout);
+    layout->addSpacing(16);
 
     auto* buttonBox = new QDialogButtonBox(
             QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
             Qt::Horizontal, this);
     m_okButton = buttonBox->button(QDialogButtonBox::Ok);
+    m_okButton->setDefault(true);
     m_okButton->setEnabled(false);
 
     connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
@@ -46,6 +53,8 @@ void AddDeviceDialog::setupUi() {
     connect(m_nameEdit, &QLineEdit::textChanged, this, &AddDeviceDialog::validateInput);
 
     layout->addWidget(buttonBox);
+
+    setMinimumWidth(400);
 }
 
 void AddDeviceDialog::validateInput() {

@@ -262,3 +262,123 @@ DeviceSection {
     padding: 16px;
     margin: 8px 0;
 }
+
+/* Primary Button */
+QPushButton[class="primary-button"] {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+QPushButton[class="primary-button"]:hover {
+    background-color: #89b4ff;
+}
+
+QPushButton[class="primary-button"]:pressed {
+    background-color: #6b91e4;
+}
+
+/* Dialog styling */
+QDialog {
+    background-color: #1a1b26;
+    color: #c0caf5;
+}
+
+/* Form elements */
+QLineEdit {
+    background-color: #24283b;
+    color: #c0caf5;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 200px;
+}
+
+QLineEdit:focus {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QLineEdit:hover {
+    border-color: #7aa2f7;
+}
+
+/* Labels in form layout */
+QFormLayout QLabel {
+    color: #c0caf5;
+    font-weight: 500;
+}
+
+/* Dialog buttons */
+QDialogButtonBox QPushButton {
+    background-color: #24283b;
+    color: #c0caf5;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    padding: 8px 16px;
+    min-width: 80px;
+}
+
+QDialogButtonBox QPushButton:hover {
+    background-color: #2f334d;
+    border-color: #7aa2f7;
+}
+
+QDialogButtonBox QPushButton[default="true"] {
+    background-color: #7aa2f7;
+    color: #1a1b26;
+    border: none;
+}
+
+QDialogButtonBox QPushButton[default="true"]:hover {
+    background-color: #89b4ff;
+}
+
+QDialogButtonBox QPushButton[default="true"]:disabled {
+    background-color: #565f89;
+    color: #9aa5ce;
+}
+
+/* Combo boxes in dialog */
+QDialog QComboBox {
+    background-color: #24283b;
+    color: #c0caf5;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    padding: 8px;
+    min-width: 200px;
+}
+
+QDialog QComboBox:hover {
+    border-color: #7aa2f7;
+}
+
+QDialog QComboBox:focus {
+    border-color: #7aa2f7;
+    background-color: #2f334d;
+}
+
+QDialog QComboBox::drop-down {
+    border: none;
+    width: 24px;
+    padding-right: 8px;
+}
+
+QDialog QComboBox::down-arrow {
+    image: url(:/res/icons/down_arrow.svg);
+    width: 12px;
+    height: 12px;
+}
+
+QDialog QComboBox QAbstractItemView {
+    background-color: #24283b;
+    border: 1px solid #2f334d;
+    border-radius: 6px;
+    selection-background-color: #7aa2f7;
+    selection-color: #1a1b26;
+    color: #c0caf5;
+    outline: 0px;
+}
